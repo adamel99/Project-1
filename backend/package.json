@@ -4,17 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-      "sequelize": "sequelize",
-      "sequelize-cli": "sequelize-cli",
-      "start": "per-env",
-      "start:development": "nodemon ./bin/www",
-      "start:production": "node ./bin/www",
-      "build": "node psql-setup-script.js"
+    "sequelize": "sequelize",
+    "sequelize-cli": "sequelize-cli",
+    "start": "per-env",
+    "start:development": "nodemon ./bin/www",
+    "start:production": "node ./bin/www",
+    "build": "node psql-setup-script.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "csurf": "^1.11.0",
@@ -34,5 +35,4 @@
     "nodemon": "^2.0.22",
     "sqlite3": "^5.1.6"
   }
-
 }
