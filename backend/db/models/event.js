@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     endDate: {type: DataTypes.DATE, allowNull: false}
   }, {
     sequelize,
-    modelName: 'Events',
+    modelName: 'Event',
   });
   return Event;
 };
