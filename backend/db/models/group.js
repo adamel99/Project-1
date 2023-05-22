@@ -1,6 +1,7 @@
 'use strict';
 const { Model, Sequelize } = require('sequelize');
 
+
 module.exports = (sequelize, DataTypes) => {
   class Group extends Model {
     static associate(models) {
