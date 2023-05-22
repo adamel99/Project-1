@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === "production") {
 
 module.exports = {
   up: async(queryInterface, Sequelize) => {
-    options.tableName = "Groups";
+    options.tableName = "groups";
     return queryInterface.bulkInsert(
       options,
       [
@@ -46,7 +46,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    options.tableName = "Groups";
+    options.tableName = "groups";
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(
       options,
