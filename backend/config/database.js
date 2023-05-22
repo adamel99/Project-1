@@ -12,10 +12,8 @@ module.exports = {
   },
   production: {
     use_env_variable: 'DATABASE_URL',
-    dialect: 'sqlite',
+    dialect: 'postgres',
     seederStorage: 'sequelize',
-    logQueryParameters: true,
-    typeValidation: true,
     dialectOptions: {
       ssl: {
         require: true,
