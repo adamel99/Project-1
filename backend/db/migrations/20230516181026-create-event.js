@@ -57,7 +57,15 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
-      }
+      },
+      previewImage: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      organizerId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
     });
   },
   async down(queryInterface, Sequelize) {

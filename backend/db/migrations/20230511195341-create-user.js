@@ -25,7 +25,15 @@ module.exports = {
         unique: true
       },
       hashedPassword: {
-        type: Sequelize.STRING.BINARY,
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      firstName:{
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      lastName: {
+        type: Sequelize.STRING,
         allowNull: false
       },
       createdAt: {
@@ -37,7 +45,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-      }
+      },
     }, options);
   },
   down: async (queryInterface, Sequelize) => {

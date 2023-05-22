@@ -19,105 +19,104 @@ const validateLogin = [
   handleValidationErrors
 ];
 
-// backend/routes/api/session.js
-// ...
 
 // Log in
-router.post(
-  '/',
-  async (req, res, next) => {
-    const { credential, password } = req.body;
+router.post('/', async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    console.log(req.body)
 
-    const user = await User.unscoped().findOne({
-      where: {
-        [Op.or]: {
-          username: credential,
-          email: credential
+    if (!email || !password) {
+      res.status(400).json({
+        message: 'Bad Request',
+        errors: {
+          email: 'Email is required',
+          password: 'Password is required'
         }
-      }
-    });
-
-    if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
-      const err = new Error('Login failed');
-      err.status = 401;
-      err.title = 'Login failed';
-      err.errors = { credential: 'The provided credentials were invalid.' };
-      return next(err);
-    }
-
-    const safeUser = {
-      id: user.id,
-      email: user.email,
-      username: user.username,
-    };
-
-    await setTokenCookie(res, safeUser);
-
-    return res.json({
-      user: safeUser
-    });
-  }
-);
-
-router.get(
-  '/',
-  (req, res) => {
-    const { user } = req;
-    if (user) {
+      });
+    } else {
+      const user = await User.findOne({ where: { email } });
       const safeUser = {
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         username: user.username,
-      };
-      return res.json({
-        user: safeUser
-      });
-    } else return res.json({ user: null });
-  }
-);
-
-router.delete(
-  '/',
-  (_req, res) => {
-    res.clearCookie('token');
-    return res.json({ message: 'success' });
-  }
-);
-router.post(
-  '/',
-  validateLogin,
-  async (req, res, next) => {
-    const { credential, password } = req.body;
-
-    const user = await User.unscoped().findOne({
-      where: {
-        [Op.or]: {
-          username: credential,
-          email: credential
-        }
-      }
-    });
-
-    if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
-      const err = new Error('Login failed');
-      err.status = 401;
-      err.title = 'Login failed';
-      err.errors = { credential: 'The provided credentials were invalid.' };
-      return next(err);
-    }
-
-    const safeUser = {
-      id: user.id,
-      email: user.email,
-      username: user.username,
     };
+    // console.log({ safeUser });
 
     await setTokenCookie(res, safeUser);
 
-    return res.json({
-      user: safeUser
-    });
+      if (!user) {
+        res.status(401).json({ message: 'Invalid credentials' });
+      } else {
+        res.status(200).json({
+          user: {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            username: user.username,
+
+          }
+        });
+      }
+    }
+  } catch (err) {
+    next(err);
   }
-);
+});
+
+
+// router.get(
+//   '/',
+//   (req, res) => {
+//     const { user } = req;
+//     if (user) {
+//       const safeUser = {
+//         id: user.id,
+//         email: user.email,
+//         username: user.username,
+//       };
+//       return res.json({
+//         user: safeUser
+//       });
+//     } else return res.json({ user: null });
+//   }
+// );
+
+// router.delete(
+//   '/',
+//   (_req, res) => {
+//     res.clearCookie('token');
+//     return res.json({ message: 'success' });
+//   }
+// );
+
+// GET CURRENT USER
+router.get('/', (req, res) => {
+  if (req.user) {
+    // User is logged in
+    res.status(200).json({
+      user: {
+        id: req.user.id,
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        email: req.user.email,
+        username: req.user.username
+      }
+    });
+  } else {
+    // No user logged in
+    res.status(200).json({ user: null });
+  }
+});
+
+
+
+
+
+
+
 
 module.exports = router;

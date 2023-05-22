@@ -33,6 +33,10 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      memberId:{
+        type: Sequelize.INTEGER,
+        allowNull: false
       }
     });
   },

@@ -21,7 +21,9 @@ module.exports = {
           capacity: 10,
           price: 10,
           startDate: "05/10/22",
-          endDate: "05/11/22"
+          endDate: "05/11/22",
+          previewImage: 'google.com',
+          organizerId: 1
         },
         {
           venueId: 2,
@@ -32,7 +34,9 @@ module.exports = {
           capacity: 20,
           price: 10,
           startDate: "2022/12/05",
-          endDate: "2022/13/05"
+          endDate: "2022/13/05",
+          previewImage: 'google.com',
+          organizerId: 4
         },
         {
           venueId: 3,
@@ -43,7 +47,9 @@ module.exports = {
           capacity: 30,
           price: 10,
           startDate: "2022/14/05",
-          endDate: "2022/15/05"
+          endDate: "2022/15/05",
+          previewImage: 'google.com',
+          organizerId: 2
         },
       ],
       {}

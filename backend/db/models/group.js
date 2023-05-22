@@ -4,10 +4,11 @@ const { Model, Sequelize } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Group extends Model {
     static associate(models) {
-      Group.belongsTo(models.User, { foreignKey: 'organizerId' });
+      Group.belongsTo(models.User, { as: 'Organizer', foreignKey: 'organizerId' });
       Group.hasMany(models.Membership, { foreignKey: 'groupId' });
       Group.hasMany(models.GroupImage, { foreignKey: 'groupId' });
       Group.hasMany(models.Event, { foreignKey: 'groupId' });
+      Group.hasMany(models.Venue, {foreignKey: 'groupId'})
     }
   }
 
@@ -35,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       type: {
-        type: Sequelize.ENUM('online', 'in person'),
+        type: Sequelize.ENUM('online', 'In person'),
         allowNull: false,
         validate: {
           notNull: { msg: 'Type is required' },
