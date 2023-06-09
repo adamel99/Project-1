@@ -32,8 +32,8 @@ module.exports = {
           type: "in person",
           capacity: 20,
           price: 10,
-          startDate: "2022/12/05",
-          endDate: "2022/13/05",
+          startDate: "05/12/22",
+          endDate: "05/13/22",
           previewImage: 'google.com',
           organizerId: 4
         },
@@ -45,8 +45,8 @@ module.exports = {
           type: "online",
           capacity: 30,
           price: 10,
-          startDate: "2022/14/05",
-          endDate: "2022/15/05",
+          startDate: "05/14/22",
+          endDate: "05/15/22",
           previewImage: 'google.com',
           organizerId: 2
         },
