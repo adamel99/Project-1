@@ -6,7 +6,6 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
     static associate(models) {
-      // define association here
       Event.belongsTo(models.Venue, { foreignKey: 'venueId' })
       Event.belongsTo(models.Group, { foreignKey: 'groupId' })
       Event.hasMany(models.EventImage, { foreignKey: 'eventId' })

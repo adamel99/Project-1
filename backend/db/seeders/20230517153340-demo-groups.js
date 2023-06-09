@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 
 let options = {};
 if (process.env.NODE_ENV === "production") {
-  options.schema = process.env.SCHEMA; // define your schema in options object
+  options.schema = process.env.SCHEMA;
 }
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -43,7 +43,6 @@ module.exports = {
     );
 
   },
-
   down: async (queryInterface, Sequelize) => {
     options.tableName = "Groups";
     const Op = Sequelize.Op;
