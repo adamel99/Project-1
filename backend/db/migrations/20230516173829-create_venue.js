@@ -5,49 +5,49 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Venues', {
-      id:{
+      id: {
         allowNull: false,
-        type:Sequelize.INTEGER,
+        type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      groupId:{
-        type:Sequelize.INTEGER,
+      groupId: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
-      address:{
-        type:Sequelize.STRING,
+      address: {
+        type: Sequelize.STRING,
         allowNull: false
       },
-      city:{
-        type:Sequelize.STRING,
+      city: {
+        type: Sequelize.STRING,
         allowNull: false
       },
-      state:{
-        type:Sequelize.STRING,
+      state: {
+        type: Sequelize.STRING,
         allowNull: false
       },
-      lat:{
+      lat: {
         type: Sequelize.DECIMAL,
         allowNull: false
       },
-      lng:{
-        type:Sequelize.DECIMAL,
+      lng: {
+        type: Sequelize.DECIMAL,
         allowNull: false
       },
-      createdAt:{
-        type:Sequelize.DATE,
+      createdAt: {
+        type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
-      updatedAt:{
-        type:Sequelize.DATE,
+      updatedAt: {
+        type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
-    })
+    },options)
     /**
      * Add altering commands here.
      *
@@ -57,7 +57,7 @@ module.exports = {
 
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Venues')
     /**
      * Add reverting commands here.

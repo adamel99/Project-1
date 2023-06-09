@@ -35,11 +35,11 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
-      memberId:{
+      memberId: {
         type: Sequelize.INTEGER,
         allowNull: false
       }
-    });
+    }, options);
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Memberships');

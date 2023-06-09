@@ -1,7 +1,7 @@
 'use strict';
 const {
   Model
-  
+
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class EventImage extends Model {
@@ -12,13 +12,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      EventImage.belongsTo(models.Event, {foreignKey: 'eventId'})
+      EventImage.belongsTo(models.Event, { foreignKey: 'eventId' })
     }
   }
   EventImage.init({
-    eventId: {type: DataTypes.INTEGER, allowNull: false},
-    url: {type: DataTypes.STRING, allowNull: false},
-    preview: {type: DataTypes.BOOLEAN, allowNull: false}
+    eventId: { type: DataTypes.INTEGER, allowNull: false },
+    url: { type: DataTypes.STRING, allowNull: false },
+    preview: { type: DataTypes.BOOLEAN, allowNull: false }
   }, {
     sequelize,
     modelName: 'EventImage',

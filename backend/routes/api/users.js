@@ -43,7 +43,6 @@ router.post("/", validateSignup, async (req, res) => {
         hashedPassword,
     });
     console.log({ firstName, lastName, user });
-
     const safeUser = {
         id: user.id,
         firstName: user.firstName,
@@ -52,71 +51,11 @@ router.post("/", validateSignup, async (req, res) => {
         username: user.username,
     };
     // console.log({ safeUser });
-
     await setTokenCookie(res, safeUser);
-
     return res.json({
         user: safeUser,
     });
 });
-
-
-// router.post(
-//     '/',
-//     async (req, res) => {
-//         const { email, password, username, firstName, lastName } = req.body;
-//         const hashedPassword = bcrypt.hashSync(password);
-//         const user = await User.create({ email, username, hashedPassword, firstName, lastName });
-
-//         const safeUser = {
-//             id: user.id,
-//             firstName: user.firstName,
-//             lastName: user.lastName,
-//             email: user.email,
-//             username: user.username,
-//         };
-
-//         await setTokenCookie(res, safeUser);
-
-//         return res.json({
-//             user: safeUser
-//         });
-//     }
-// );
-
-// router.post('/', async (req, res, next) => {
-//     try {
-//       const { email, password } = req.body;
-
-//       if (!email || !password) {
-//         res.status(400).json({
-//           message: 'Bad Request',
-//           errors: {
-//             email: 'Email is required',
-//             password: 'Password is required'
-//           }
-//         });
-//       } else {
-//         const user = await User.findOne({ where: { email } });
-
-//         if (!user || !user.validatePassword(password)) {
-//           res.status(401).json({ message: 'Invalid credentials' });
-//         } else {
-//           res.status(200).json({
-//             user: {
-//               id: user.id,
-//               firstName: user.firstName,
-//               lastName: user.lastName,
-//               email: user.email,
-//               username: user.username
-//             }
-//           });
-//         }
-//       }
-//     } catch (err) {
-//       next(err);
-//     }
-//   });
 
 
 

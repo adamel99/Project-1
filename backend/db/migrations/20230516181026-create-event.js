@@ -67,7 +67,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-    });
+    }, options);
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Events');

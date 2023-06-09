@@ -1,7 +1,7 @@
 'use strict';
 const {
   Model
-  
+
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Attendance extends Model {
@@ -17,9 +17,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Attendance.init({
-    eventId: {type:DataTypes.INTEGER, allowNull: false},
-    userId: {type:DataTypes.INTEGER, allowNull: false},
-    status: {type: DataTypes.ENUM('pending', 'waitlist', 'attending'), allowNull: false},
+    eventId: { type: DataTypes.INTEGER, allowNull: false },
+    userId: { type: DataTypes.INTEGER, allowNull: false },
+    status: { type: DataTypes.ENUM('pending', 'waitlist', 'attending'), allowNull: false },
   }, {
     sequelize,
     modelName: 'Attendance',

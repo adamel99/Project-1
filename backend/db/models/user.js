@@ -42,14 +42,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
-      lastName:{
+      lastName: {
         type: DataTypes.STRING,
         allowNull: false
       }
     }, {
-      sequelize,
-      modelName: 'User'
-    }
+    sequelize,
+    modelName: 'User'
+  }
   );
   return User;
 };

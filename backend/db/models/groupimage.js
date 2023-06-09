@@ -1,7 +1,7 @@
 'use strict';
 const {
   Model
-  
+
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class GroupImage extends Model {
@@ -11,14 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      GroupImage.belongsTo(models.Group, {foreignKey: 'groupId'})
+      GroupImage.belongsTo(models.Group, { foreignKey: 'groupId' })
       // define association here
     }
   }
   GroupImage.init({
-    groupId: {type: DataTypes.INTEGER, allowNull: false},
-    url: {type: DataTypes.STRING, allowNull: false},
-    preview: {type:DataTypes.BOOLEAN, allowNull: false}
+    groupId: { type: DataTypes.INTEGER, allowNull: false },
+    url: { type: DataTypes.STRING, allowNull: false },
+    preview: { type: DataTypes.BOOLEAN, allowNull: false }
   }, {
     sequelize,
     modelName: 'GroupImage',
