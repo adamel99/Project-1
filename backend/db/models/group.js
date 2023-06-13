@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       type: {
-        type: Sequelize.ENUM('online', 'In person'),
+        type: Sequelize.ENUM('Online', 'In person'),
         allowNull: false,
         validate: {
           notNull: { msg: 'Type is required' },

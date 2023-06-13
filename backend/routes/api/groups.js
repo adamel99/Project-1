@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// // Get all Groups joined or organized by the Current User
+// Get all Groups joined or organized by the Current User
 router.get('/current', requireAuth, async (req, res, next) => {
   try {
     const user = req.user;
