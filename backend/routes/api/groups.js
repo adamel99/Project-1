@@ -49,28 +49,17 @@ router.get('/:groupId', async (req, res) => {
 });
 
 // Create a Group
-router.post("/", async (req, res) => {
-  const { name, about, type, private, city, state } = req.body;
-  const organizerId = req.user.id;
-  console.log(req.user)
-  try {
-    const group = await Group.create({
-      organizerId,
-      name,
-      about,
-      type,
-      private,
-      city,
-      state,
-    });
-    console.log("group: " + group)
-    return res.status(201).json(group);
-  } catch (error) {
-    return res.status(400).json({ message: 'Bad Request', errors: error.errors });
-  }
+router.post("/", requireAuth, async (req, res) => {
+  const newGroup = await Group.create({
+    organizerId: req.user.id,
+    ...validGroup(req.body),
+  });
+
+  res.status(201);
+  res.json(newGroup);
 });
 
-// // Add an Image to a Group based on the Group's id
+// Add an Image to a Group based on the Group's id
 router.post('/:groupId/images', async (req, res) => {
   const groupId = req.params.groupId;
   const { url, preview } = req.body;

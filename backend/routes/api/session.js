@@ -22,33 +22,38 @@ const validateLogin = [
 // Log in
 router.post('/', async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    console.log(req.body)
+    const { credentials, password } = req.body;
+    console.log(req.body);
 
-    if (!email || !password) {
+    if (!credentials || !password) {
       res.status(400).json({
         message: 'Bad Request',
         errors: {
-          email: 'Email is required',
+          credentials: 'Credentials (email or username) is required',
           password: 'Password is required'
         }
       });
     } else {
-      const user = await User.findOne({ where: { email } });
-      const safeUser = {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        username: user.username,
-      };
-      console.log({ safeUser });
-
-      await setTokenCookie(res, safeUser);
+      const user = await User.findOne({
+        where: {
+          [Op.or]: [{ email: credentials }, { username: credentials }]
+        }
+      });
 
       if (!user) {
         res.status(401).json({ message: 'Invalid credentials' });
       } else {
+        const safeUser = {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          username: user.username,
+        };
+        console.log({ safeUser });
+
+        await setTokenCookie(res, safeUser);
+
         res.status(200).json({
           user: {
             id: user.id,
@@ -56,7 +61,6 @@ router.post('/', async (req, res, next) => {
             lastName: user.lastName,
             email: user.email,
             username: user.username,
-
           }
         });
       }
@@ -65,6 +69,7 @@ router.post('/', async (req, res, next) => {
     next(err);
   }
 });
+
 
 // GET CURRENT USER
 router.get('/', (req, res) => {
