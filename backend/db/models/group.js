@@ -15,49 +15,49 @@ module.exports = (sequelize, DataTypes) => {
   Group.init(
     {
       organizerId: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
           notNull: { msg: 'Organizer ID is required' },
         },
       },
       name: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notNull: { msg: 'Name is required' },
         },
       },
       about: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notNull: { msg: 'About is required' },
         },
       },
       type: {
-        type: Sequelize.ENUM('Online', 'In person'),
+        type: DataTypes.ENUM('Online', 'In person'),
         allowNull: false,
         validate: {
           notNull: { msg: 'Type is required' },
         },
       },
       private: {
-        type: Sequelize.BOOLEAN,
+        type: DataTypes.BOOLEAN,
         allowNull: false,
         validate: {
           notNull: { msg: 'Private is required' },
         },
       },
       city: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notNull: { msg: 'City is required' },
         },
       },
       state: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notNull: { msg: 'State is required' },
