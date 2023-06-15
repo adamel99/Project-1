@@ -92,7 +92,7 @@ const validGroup = ({ name, about, type, private, city, state }) => {
     if (!about || about.length <= 30) {
       errRes.errors.about = "About must be 30 characters or more";
     }
-    if (!type || (type !== "online" && type !== "in person")) {
+    if (!type || (type !== "Online" && type !== "In person")) {
       errRes.errors.type = "Type must be 'Online' or 'In person";
     }
     if (!private && typeof private !== "boolean") {
@@ -109,7 +109,7 @@ const validGroup = ({ name, about, type, private, city, state }) => {
       name,
       about,
       private,
-      type: type.toLowerCase(),
+      type,
       city,
       state,
     };
