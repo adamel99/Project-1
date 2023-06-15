@@ -20,56 +20,43 @@ const validateLogin = [
 
 
 // Log in
-router.post('/', async (req, res, next) => {
-  try {
-    const { credentials, password } = req.body;
-    console.log(req.body);
+router.post("/", validateLogin, async (req, res, next) => {
+  const { credential, password } = req.body;
 
-    if (!credentials || !password) {
-      res.status(400).json({
-        message: 'Bad Request',
-        errors: {
-          credentials: 'Credentials (email or username) is required',
-          password: 'Password is required'
-        }
-      });
-    } else {
-      const user = await User.findOne({
-        where: {
-          [Op.or]: [{ email: credentials }, { username: credentials }]
-        }
-      });
+  const user = await User.unscoped().findOne({
+    where: {
+      [Op.or]: {
+        username: credential,
+        email: credential,
+      },
+    },
+  });
 
-      if (!user) {
-        res.status(401).json({ message: 'Invalid credentials' });
-      } else {
-        const safeUser = {
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          username: user.username,
-        };
-        console.log({ safeUser });
-
-        await setTokenCookie(res, safeUser);
-
-        res.status(200).json({
-          user: {
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            username: user.username,
-          }
-        });
-      }
-    }
-  } catch (err) {
-    next(err);
+  if (
+    !user ||
+    !bcrypt.compareSync(password, user.hashedPassword.toString())
+  ) {
+    const err = new Error("Login failed");
+    err.status = 401;
+    err.title = "Login failed";
+    err.errors = { credential: "The provided credentials were invalid." };
+    return next(err);
   }
-});
 
+  const safeUser = {
+    id: user.id,
+    email: user.email,
+    username: user.username,
+    firstName: user.firstName,
+    lastName: user.lastName,
+  };
+
+  await setTokenCookie(res, safeUser);
+
+  return res.json({
+    user: safeUser,
+  });
+});
 
 // GET CURRENT USER
 router.get('/', (req, res) => {
