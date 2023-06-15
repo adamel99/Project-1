@@ -7,7 +7,15 @@ const { Venue } = require('../../db/models');
 const { User } = require('../../db/models');
 const { Op } = require('sequelize');
 const { Group } = require('../../db/models');
-const { Membership } = require('../../db/models')
+const { Membership } = require('../../db/models');
+const {
+  requireAuth,
+  checkAuthorization,
+  validGroup,
+  validVenue,
+  validEvent,
+} = require("../../utils/auth");
+
 
 // Get all Groups
 router.get("/", async (req, res) => {
