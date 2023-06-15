@@ -32,30 +32,32 @@ const validateSignup = [
 
 
 // Sign up
-router.post("/", validateSignup, async (req, res) => {
+router.post("", validateSignup, async (req, res) => {
     const { firstName, lastName, email, password, username } = req.body;
+    console.log(password);
     const hashedPassword = bcrypt.hashSync(password);
     const user = await User.create({
-        firstName,
-        lastName,
-        email,
-        username,
-        hashedPassword,
+      firstName,
+      lastName,
+      email,
+      username,
+      hashedPassword,
     });
-    console.log({ firstName, lastName, user });
-    const safeUser = {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        username: user.username,
-    };
-    await setTokenCookie(res, safeUser);
-    return res.json({
-        user: safeUser,
-    });
-});
 
+    const safeUser = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      username: user.username,
+    };
+
+    await setTokenCookie(res, safeUser);
+
+    return res.json({
+      user: safeUser,
+    });
+  });
 
 
 module.exports = router;
