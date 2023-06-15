@@ -300,7 +300,7 @@ router.post('/:groupId/membership', async (req, res, next) => {
     const existingRequest = await Membership.findOne({
       where: {
         groupId,
-        memberId: userId,
+        userId,
         status: 'pending',
       },
     });
@@ -312,7 +312,7 @@ router.post('/:groupId/membership', async (req, res, next) => {
     const existingMembership = await Membership.findOne({
       where: {
         groupId,
-        memberId: userId,
+        userId,
         status: 'member',
       },
     });
@@ -323,13 +323,12 @@ router.post('/:groupId/membership', async (req, res, next) => {
     }
     const newMembership = await Membership.create({
       groupId,
-      memberId: userId,
+      userId,
       status: 'pending',
-      userId
     });
 
     res.status(200).json({
-      memberId: newMembership.memberId,
+      memberId: newMembership.userId,
       status: newMembership.status,
     });
   } catch (err) {
@@ -361,7 +360,7 @@ router.put('/:groupId/membership', async (req, res, next) => {
     const membership = await Membership.findOne({
       where: {
         groupId,
-        memberId,
+        userId: memberId,
       },
     });
 
@@ -385,7 +384,7 @@ router.put('/:groupId/membership', async (req, res, next) => {
         });
       }
     } else if (status === 'co-host') {
-      const isOrganizer = currentUser.id === group.organizerId;
+      const isOrganizer = userId === group.organizerId;
       if (!isOrganizer) {
         return res.status(403).json({
           message: 'Unauthorized',
@@ -397,7 +396,7 @@ router.put('/:groupId/membership', async (req, res, next) => {
     res.status(200).json({
       id: membership.id,
       groupId: membership.groupId,
-      memberId: membership.memberId,
+      memberId: membership.userId,
       status: membership.status,
     });
   } catch (err) {
@@ -468,7 +467,7 @@ router.delete('/:groupId/membership', async (req, res, next) => {
     const membership = await Membership.findOne({
       where: {
         groupId,
-        memberId,
+        userId: memberId,
       },
     });
     if (!membership) {
@@ -476,7 +475,7 @@ router.delete('/:groupId/membership', async (req, res, next) => {
         message: 'Membership does not exist for this User',
       });
     }
-    const isAuthorized = req.user && (req.user.id === membership.memberId || req.user.id === group.organizerId);
+    const isAuthorized = req.user && (req.user.id === membership.userId || req.user.id === group.organizerId);
     if (!isAuthorized) {
       return res.status(403).json({
         message: 'Only the User or organizer may delete a Membership',

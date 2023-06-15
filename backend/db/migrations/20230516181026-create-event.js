@@ -13,10 +13,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       venueId: {
+        references: {model: 'Venues', key: 'id'},
         type: Sequelize.INTEGER,
         allowNull: false
       },
       groupId: {
+        references: {model: 'Groups', key: 'id'},
         type: Sequelize.INTEGER,
         allowNull: false
       },
@@ -61,10 +63,6 @@ module.exports = {
       previewImage: {
         allowNull: true,
         type: Sequelize.STRING
-      },
-      organizerId: {
-        type: Sequelize.INTEGER,
-        allowNull: false
       },
     }, options);
   },

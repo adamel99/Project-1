@@ -13,10 +13,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       userId: {
+        references: {model: 'Users', key: 'id'},
         type: Sequelize.INTEGER,
         allowNull: false
       },
       groupId: {
+        references: {model: 'Groups', key: 'id'},
         type: Sequelize.INTEGER,
         allowNull: false
       },
@@ -34,10 +36,6 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
-      memberId: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      }
     }, options);
   },
   async down(queryInterface, Sequelize) {

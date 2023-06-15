@@ -1,7 +1,7 @@
 "use strict";
 let options = {};
 if (process.env.NODE_ENV === "production") {
-  options.schema = process.env.SCHEMA; 
+  options.schema = process.env.SCHEMA;
 }
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -20,7 +20,6 @@ module.exports = {
           startDate: "05/10/22",
           endDate: "05/11/22",
           previewImage: 'google.com',
-          organizerId: 1
         },
         {
           venueId: 2,
@@ -33,7 +32,6 @@ module.exports = {
           startDate: "05/12/22",
           endDate: "05/13/22",
           previewImage: 'google.com',
-          organizerId: 4
         },
         {
           venueId: 3,
@@ -46,7 +44,6 @@ module.exports = {
           startDate: "05/14/22",
           endDate: "05/15/22",
           previewImage: 'google.com',
-          organizerId: 2
         },
       ],
       {}

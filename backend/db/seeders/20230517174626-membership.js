@@ -15,19 +15,19 @@ module.exports = {
           userId: 1,
           groupId: 1,
           status: 'member',
-          memberId: 4
+
         },
         {
           userId: 2,
           groupId: 2,
           status: 'member',
-          memberId: 1
+
         },
         {
           userId: 3,
           groupId: 3,
           status: 'host',
-          memberId: 2
+
         },
       ],
       {}
