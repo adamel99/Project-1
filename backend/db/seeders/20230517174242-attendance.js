@@ -3,7 +3,7 @@
 
 let options = {};
 if (process.env.NODE_ENV === "production") {
-  options.schema = process.env.SCHEMA; 
+  options.schema = process.env.SCHEMA;
 }
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -37,7 +37,7 @@ module.exports = {
     return queryInterface.bulkDelete(
       options,
       {
-        status: { [Op.in]: ["attending", "waitilist", "attending"] },
+        status: { [Op.in]: ["attending", "waitlist", "attending"] },
       },
       {}
     );
