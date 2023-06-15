@@ -117,4 +117,4 @@ const validGroup = ({ name, about, type, private, city, state }) => {
 
 
 
-module.exports = { setTokenCookie, restoreUser, requireAuth };
+module.exports = { setTokenCookie, restoreUser, requireAuth, validGroup };
