@@ -105,6 +105,7 @@ const validGroup = ({ name, about, type, private, city, state }) => {
     if (Object.keys(errRes.errors).length > 0) {
       throw errRes;
     }
+    console.log(type)
     return {
       name,
       about,
