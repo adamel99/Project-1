@@ -247,7 +247,7 @@ router.post('/:groupId/events', (req, res) => {
         return res.status(401).json({ message: 'Unauthorized' });
       }
 
-      Event.create({ organizerId: group.organizerId, groupId, venueId, name, type, capacity, price, description, startDate, endDate })
+      Event.create({ groupId, venueId, name, type, capacity, price, description, startDate, endDate })
         .then(event => {
           res.status(200).json(event);
         })
