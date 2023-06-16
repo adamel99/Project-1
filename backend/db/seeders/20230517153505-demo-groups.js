@@ -40,6 +40,7 @@ module.exports = {
           state: 'Sample State 3',
         },
       ],
+      {}
     );
 
   },
@@ -50,7 +51,8 @@ module.exports = {
       options,
       {
         name: { [Op.in]: ["Sample Group 1", "Sample Group 2", "Sample Group 3"] },
-      }
+      },
+      {}
     )
   }
 };
