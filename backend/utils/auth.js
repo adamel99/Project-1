@@ -150,6 +150,14 @@ const validGroup = ({ name, about, type, private, city, state }) => {
     };
   };
 
+  const checkAuthorization = (condition, message = "Forbidden") => {
+    if (!condition) {
+      throw {
+        status: 403,
+        message,
+      };
+    }
+  };
 
 
-module.exports = { setTokenCookie, restoreUser, requireAuth, validGroup, validVenue };
+module.exports = { setTokenCookie, restoreUser, requireAuth, validGroup, validVenue, checkAuthorization };
