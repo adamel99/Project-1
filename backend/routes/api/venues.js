@@ -7,6 +7,7 @@ const { User } = require('../../db/models');
 const { GroupImage } = require('../../db/models');
 const { validVenue, checkAuthorization } = require("../../utils/auth");
 const { checkIfExist } = require("../../utils/validation");
+const { Membership } = require('../../db/models')
 
 // Edit a Venue by ID
 router.put("/:venueId", requireAuth, async (req, res) => {
