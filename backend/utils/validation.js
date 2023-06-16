@@ -17,6 +17,15 @@ const handleValidationErrors = (req, _res, next) => {
   next();
 };
 
+const checkIfExist = (condition, message = "Group couldn't be found") => {
+  if (!condition) {
+    throw {
+      message,
+      status: 404,
+    };
+  }
+};
+
 module.exports = {
-  handleValidationErrors
+  handleValidationErrors, checkIfExist
 };
