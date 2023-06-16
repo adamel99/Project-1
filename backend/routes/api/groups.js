@@ -246,7 +246,6 @@ router.post('/:groupId/events', (req, res) => {
       if (!isOrganizer) {
         return res.status(401).json({ message: 'Unauthorized' });
       }
-      return [groupId, venueId, name, type, capacity, price, description, startDate, endDate];
       Event.create({ groupId, venueId, name, type, capacity, price, description, startDate, endDate })
         .then(event => {
           res.status(200).json(event);
@@ -364,12 +363,31 @@ router.put('/:groupId/membership', async (req, res, next) => {
       },
     });
 
+    const current_user_membership = await Membership.findOne({
+      where: {
+        groupId,
+        userId: userId
+      }
+    })
+
     if (!membership) {
       return res.status(404).json({
         message: 'Membership between the user and the group does not exist',
       });
     }
     if (status === 'pending') {
+      const canChangeStatus = userId === group.organizerId || current_user_membership.status === 'co-host';
+      if (canChangeStatus) {
+        try {
+          membership.groupId = groupId
+          membership.userId = memberId
+          membership.status = status
+          await membership.save();
+          res.status(200).json(group);
+        } catch (error) {
+          res.status(400).json({ message: 'Bad Request', errors: error.errors });
+        }
+      }
       return res.status(400).json({
         message: 'Validation Error',
         errors: {
@@ -385,12 +403,37 @@ router.put('/:groupId/membership', async (req, res, next) => {
       }
     } else if (status === 'co-host') {
       const isOrganizer = userId === group.organizerId;
-      if (!isOrganizer) {
+      if (!isOrganizer ) {
         return res.status(403).json({
           message: 'Unauthorized',
         });
+
       }
     }
+
+    // if (status === 'pending') {
+    //   return res.status(400).json({
+    //     message: 'Validation Error',
+    //     errors: {
+    //       status: 'Cannot change a membership status to pending',
+    //     },
+    //   });
+    // } else if (status === 'member') {
+    //   const canChangeStatus = userId === group.organizerId || membership.status === 'co-host';
+    //   if (!canChangeStatus) {
+    //     return res.status(403).json({
+    //       message: 'Unauthorized',
+    //     });
+    //   }
+    // } else if (status === 'co-host') {
+    //   const isOrganizer = userId === group.organizerId;
+    //   if (!isOrganizer ) {
+    //     return res.status(403).json({
+    //       message: 'Unauthorized',
+    //     });
+
+    //   }
+    // }
     // rework for cohost changing the membership status
     membership.status = status;
     await membership.save();
