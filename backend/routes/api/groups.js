@@ -391,6 +391,7 @@ router.put('/:groupId/membership', async (req, res, next) => {
         });
       }
     }
+    // rework for cohost changing the membership status
     membership.status = status;
     await membership.save();
     res.status(200).json({
