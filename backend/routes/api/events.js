@@ -129,12 +129,19 @@ router.put("/:eventId", requireAuth, async (req, res) => {
     if (!isOrganizer && !isCoHost) {
       throw new Error("Unauthorized");
     }
-    await event.update(validEvent(req.body));
+    const { title, description, date, time } = req.body;
+    await event.update({
+      title: title || event.title,
+      description: description || event.description,
+      date: date || event.date,
+      time: time || event.time,
+    });
     res.json(event);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 
 // REQUEST ATTENDANCE TO EVENT
