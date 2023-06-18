@@ -12,11 +12,25 @@ const { validGroup } = require("../../utils/auth");
 
 
 // Get all Groups
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   try {
-    const groups = await Group.findAll();
+    const groups = await Group.findAll({
+      attributes: {
+        include: [
+          [sequelize.literal('(SELECT COUNT(*) FROM Memberships WHERE Memberships.groupId = Group.id)'), 'numMembers'],
+        ],
+      },
+    });
+    const groupIds = groups.map(group => group.id);
+    const groupImages = await GroupImage.findAll({
+      where: { groupId: groupIds, preview: true },
+    });
+    const groupsWithImages = groups.map(group => ({
+      ...group.toJSON(),
+      previewImage: groupImages.find(image => image.groupId === group.id)?.url || null,
+    }));
     res.status(200).json({
-      Group: groups
+      Groups: groupsWithImages,
     });
   } catch (err) {
     next(err);
@@ -233,7 +247,7 @@ router.put('/venues/:venueId', (req, res) => {
 router.post('/:groupId/events', (req, res) => {
   const groupId = req.params.groupId;
   const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
-  const userId = req.user.id; // Assuming you have middleware to handle authentication and populate req.user with the logged-in user's details
+  const userId = req.user.id;
 
   Group.findOne({ where: { id: groupId } })
     .then(group => {
@@ -383,7 +397,7 @@ router.put('/:groupId/membership', async (req, res, next) => {
           membership.userId = memberId
           membership.status = status
           await membership.save();
-          res.status(200).json(group);
+          res.status(200).json(membership);
         } catch (error) {
           res.status(400).json({ message: 'Bad Request', errors: error.errors });
         }
