@@ -7,6 +7,7 @@ const { Venue } = require('../../db/models');
 const { User } = require('../../db/models');
 const { Op } = require('sequelize');
 const { Membership } = require('../../db/models')
+const { GroupImage } = require('../../db/models')
 
 // Delete an image for a EVENT
 router.delete("/:imageId", requireAuth, async (req, res) => {

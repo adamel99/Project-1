@@ -6,7 +6,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Venue extends Model {
     static associate(models) {
-      Venue.belongsTo(models.Group, { foreignKey: 'groupId' });
+      Venue.belongsTo(models.Group, { foreignKey: 'groupId', onDelete: 'CASCADE' });
     }
   }
   Venue.init({
