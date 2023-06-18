@@ -418,117 +418,68 @@ router.post('/:groupId/membership', async (req, res, next) => {
 });
 
 // CHANGE MEMBERSHIP STATUS
-router.put('/:groupId/membership', async (req, res, next) => {
+router.put("/:groupId/membership", requireAuth, async (req, res) => {
   try {
-    const userId = req.user.id;
-    const { groupId } = req.params;
     const { memberId, status } = req.body;
+    if (!memberId || !status) {
+      return res.status(400).json({ message: "Body not provided" });
+    }
+    if (status === "pending") {
+      return res.status(400).json({
+        message: "Validation Error",
+        errors: {
+          status: "Cannot change a membership status to pending",
+        },
+      });
+    }
+    const existingUser = await User.findOne({
+      where: { id: memberId },
+    });
+    if (!existingUser) {
+      return res.status(400).json({
+        message: "Validation Error",
+        errors: {
+          memberId: "User couldn't be found",
+        },
+      });
+    }
+    const groupId = req.params.groupId;
     const group = await Group.findByPk(groupId);
     if (!group) {
-      return res.status(404).json({
-        message: 'Group couldn\'t be found',
-      });
+      throw new Error("Group couldn't be found");
     }
-    const user = await User.findByPk(memberId);
-    if (!user) {
-      return res.status(400).json({
-        message: 'User couldn\'t be found',
-        errors: {
-          memberId: 'User couldn\'t be found',
-        },
-      });
-    }
-    const membership = await Membership.findOne({
+    const userId = req.user.id;
+    const member = await Membership.findOne({
       where: {
-        groupId,
         userId: memberId,
+        groupId,
       },
     });
-
-    const current_user_membership = await Membership.findOne({
-      where: {
-        groupId,
-        userId: userId
-      }
-    })
-
-    if (!membership || status !== 'pending') {
-      return res.status(404).json({
-        message: 'Membership between the user and the group does not exist',
-      });
+    if (!member) {
+      throw new Error("Membership between the user and the group does not exist");
     }
-    if (status === 'pending') {
-      const canChangeStatus = userId === group.organizerId || current_user_membership.status === 'co-host';
-      if (canChangeStatus) {
-        try {
-          membership.groupId = groupId
-          membership.userId = memberId
-          membership.status = status
-          await membership.save();
-          res.status(200).json(membership);
-        } catch (error) {
-          res.status(400).json({ message: 'Bad Request', errors: error.errors });
-        }
-      }
-      return res.status(400).json({
-        message: 'Validation Error',
-        errors: {
-          status: 'Cannot change a membership status to pending',
-        },
-      });
-    } else if (status === 'member') {
-      const canChangeStatus = userId === group.organizerId || membership.status === 'co-host';
-      if (!canChangeStatus) {
-        return res.status(403).json({
-          message: 'Unauthorized',
-        });
-      }
-    } else if (status === 'co-host') {
-      const isOrganizer = userId === group.organizerId;
-      if (!isOrganizer) {
-        return res.status(403).json({
-          message: 'Unauthorized',
-        });
-
-      }
-    }
-
-    // if (status === 'pending') {
-    //   return res.status(400).json({
-    //     message: 'Validation Error',
-    //     errors: {
-    //       status: 'Cannot change a membership status to pending',
-    //     },
-    //   });
-    // } else if (status === 'member') {
-    //   const canChangeStatus = userId === group.organizerId || membership.status === 'co-host';
-    //   if (!canChangeStatus) {
-    //     return res.status(403).json({
-    //       message: 'Unauthorized',
-    //     });
-    //   }
-    // } else if (status === 'co-host') {
-    //   const isOrganizer = userId === group.organizerId;
-    //   if (!isOrganizer ) {
-    //     return res.status(403).json({
-    //       message: 'Unauthorized',
-    //     });
-
-    //   }
-    // }
-    // rework for cohost changing the membership status
-    membership.status = status;
-    await membership.save();
-    res.status(200).json({
-      id: membership.id,
-      groupId: membership.groupId,
-      memberId: membership.userId,
-      status: membership.status,
+    const isCoHost = await Membership.findOne({
+      where: { userId, groupId, status: "co-host" },
     });
-  } catch (err) {
-    next(err);
+    const isOrganizer = group.organizerId === userId;
+    if (!(isCoHost || isOrganizer)) {
+      throw new Error("Unauthorized");
+    }
+    if (status === "co-host" && !isOrganizer) {
+      throw new Error("Unauthorized");
+    }
+    await member.update({ status });
+    await member.reload({ attributes: { include: ["id"] } });
+    const memberRr = member.toJSON();
+    delete memberRr.createdAt;
+    delete memberRr.updatedAt;
+
+    res.json({ id: member.id, ...memberRr });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
+
 
 // Get all members of a group specified by its id
 router.get('/:groupId/members', async (req, res, next) => {
