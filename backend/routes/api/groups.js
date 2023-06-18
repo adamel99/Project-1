@@ -14,22 +14,31 @@ const { Sequelize } = require('sequelize');
 
 
 // Get all Groups
-router.get("/", async (req, res, next) => {
-  try {
-    const groups = await Group.findAll({
-      attributes: {
-        include: [
-          [Sequelize.literal('(SELECT COUNT(*) FROM Memberships WHERE Memberships.groupId = Group.id)'), 'numMembers'],
-          [Sequelize.literal('(SELECT url FROM GroupImages WHERE GroupImages.groupId = Group.id AND GroupImages.preview = true)'), 'previewImage']
-        ]
-      }
+router.get("/", async (req, res) => {
+  const groups = await Group.findAll({
+    raw: true,
+  });
+  for (let group of groups) {
+    const numMembers = await Membership.count({
+      where: {
+        groupId: group.id,
+        status: {
+          [Op.not]: "pending",
+        },
+      },
     });
-    res.status(200).json({
-      Groups: groups
+    const previewImage = await GroupImage.findOne({
+      where: {
+        groupId: group.id,
+        preview: true,
+      },
     });
-  } catch (err) {
-    next(err);
+    group.numMembers = numMembers;
+    group.previewImage = previewImage ? previewImage.url : null;
   }
+  res.json({
+    Groups: groups,
+  });
 });
 
 
