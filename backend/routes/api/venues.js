@@ -32,12 +32,13 @@ router.put("/:venueId", requireAuth, async (req, res) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  await venue.update(validVenue(req.body));
+  await venue.update(req.body);
   const venueEe = venue.toJSON();
   delete venueEe.createdAt;
   delete venueEe.updatedAt;
   res.json(venueEe);
 });
+
 
 
 
