@@ -9,6 +9,8 @@ const { Op } = require('sequelize');
 const { Group } = require('../../db/models');
 const { Membership } = require('../../db/models');
 const { validGroup } = require("../../utils/auth");
+const { Sequelize } = require('sequelize');
+
 
 
 // Get all Groups
@@ -17,25 +19,19 @@ router.get("/", async (req, res, next) => {
     const groups = await Group.findAll({
       attributes: {
         include: [
-          [sequelize.literal('(SELECT COUNT(*) FROM Memberships WHERE Memberships.groupId = Group.id)'), 'numMembers'],
-        ],
-      },
+          [Sequelize.literal('(SELECT COUNT(*) FROM Memberships WHERE Memberships.groupId = Group.id)'), 'numMembers'],
+          [Sequelize.literal('(SELECT url FROM GroupImages WHERE GroupImages.groupId = Group.id AND GroupImages.preview = true)'), 'previewImage']
+        ]
+      }
     });
-    const groupIds = groups.map(group => group.id);
-    const groupImages = await GroupImage.findAll({
-      where: { groupId: groupIds, preview: true },
-    });
-    const groupsWithImages = groups.map(group => ({
-      ...group.toJSON(),
-      previewImage: groupImages.find(image => image.groupId === group.id)?.url || null,
-    }));
     res.status(200).json({
-      Groups: groupsWithImages,
+      Groups: groups
     });
   } catch (err) {
     next(err);
   }
 });
+
 
 // Get all Groups joined or organized by the Current User
 router.get('/current', requireAuth, async (req, res, next) => {
