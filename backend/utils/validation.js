@@ -26,6 +26,5 @@ const checkIfExist = (condition, message = "Group couldn't be found") => {
   }
 };
 
-module.exports = {
-  handleValidationErrors, checkIfExist
+module.exports = { handleValidationErrors, checkIfExist
 };
