@@ -8,7 +8,7 @@ const { User } = require('../../db/models');
 const { Op } = require('sequelize');
 const { Group } = require('../../db/models');
 const { Membership } = require('../../db/models');
-
+const { EventImage } = require('../../db/models');
 const { Attendance } = require('../../db/models');
 
 
