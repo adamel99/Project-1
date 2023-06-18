@@ -104,33 +104,38 @@ router.get("/:eventId", async (req, res) => {
 
 
 //EDIT EVENTS
-router.put('/:eventId', requireAuth, async (req, res) => {
-  const eventId = req.params.eventId;
-  const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
-  const organizerId = req.user.id;
-  const event = await Event.findByPk(eventId);
-  if (!event) {
-    return res.status(404).json({ message: "Event couldn't be found" });
-  }
-  if (event.organizerId !== organizerId) {
-    return res.status(403).json({ message: 'Unauthorized' });
-  }
+router.put("/:eventId", requireAuth, async (req, res) => {
   try {
-    event.venueId = venueId;
-    event.name = name;
-    event.type = type;
-    event.capacity = capacity;
-    event.price = price;
-    event.description = description;
-    event.startDate = startDate;
-    event.endDate = endDate;
-    event.organizerId = organizerId
-    await event.save();
-    res.status(200).json(event);
+    const userId = req.user.id;
+    const venue = await Venue.findByPk(req.body.venueId);
+    if (!venue) {
+      throw new Error("Venue couldn't be found");
+    }
+    const event = await Event.findByPk(req.params.eventId);
+    if (!event) {
+      throw new Error("Event couldn't be found");
+    }
+    const isCoHost = await Membership.findOne({
+      where: {
+        userId,
+        status: "co-host",
+        groupId: event.groupId,
+      },
+    });
+    const isOrganizer = await Group.findOne({
+      where: { organizerId: userId, id: event.groupId },
+    });
+    console.log({ isOrganizer, isCoHost });
+    if (!isOrganizer && !isCoHost) {
+      throw new Error("Unauthorized");
+    }
+    await event.update(validEvent(req.body));
+    res.json(event);
   } catch (error) {
-    res.status(400).json({ message: 'Bad Request', errors: error.errors });
+    res.status(500).json({ error: error.message });
   }
 });
+
 
 // REQUEST ATTENDANCE TO EVENT
 router.post('/:eventId/attendance', async (req, res, next) => {
