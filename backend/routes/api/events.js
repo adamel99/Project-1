@@ -69,14 +69,37 @@ router.get("/", async (req, res) => {
 
 
 // GET DETAILS OF EVENT BY ID
-router.get('/:eventId', async (req, res) => {
-  const eventId = req.params.eventId;
-  const event = await Group.findByPk(eventId);
-  if (!event) {
-    return res.status(404).json({ message: "Event couldn't be found" });
+router.get("/:eventId", async (req, res) => {
+  try {
+    const eventId = req.params.eventId;
+    const event = await Event.findOne({
+      where: { id: eventId },
+      include: [{ model: EventImage, attributes: ["id", "url", "preview"] }],
+    });
+    if (!event) {
+      throw new Error("Event couldn't be found");
+    }
+    const group = await Group.findOne({
+      where: { id: event.groupId },
+      attributes: ["id", "name", "private", "city", "state"],
+    });
+    const venue = await Venue.findOne({
+      where: { id: event.venueId },
+      attributes: { exclude: ["updatedAt", "createdAt", "groupId"] },
+    });
+    const attendance = await Attendance.count({
+      where: { eventId, status: { [Op.not]: "pending" } },
+    });
+    const eventObj = event.toJSON();
+    eventObj.numAttending = attendance;
+    eventObj.Group = group;
+    eventObj.Venue = venue;
+    res.json(eventObj);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-  res.status(200).json(event);
 });
+
 
 //EDIT EVENTS
 router.put('/:eventId', requireAuth, async (req, res) => {
