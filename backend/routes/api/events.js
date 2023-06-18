@@ -297,6 +297,7 @@ router.delete('/:eventId/attendance', async (req, res, next) => {
   try {
     const { eventId } = req.params;
     const { userId } = req.body;
+    const parsedUserId = parseInt(userId, 10);
     const event = await Event.findByPk(eventId);
     if (!event) {
       return res.status(404).json({
@@ -306,7 +307,7 @@ router.delete('/:eventId/attendance', async (req, res, next) => {
     const attendance = await Attendance.findOne({
       where: {
         eventId,
-        userId,
+        userId: parsedUserId,
       },
     });
     if (!attendance) {
