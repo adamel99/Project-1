@@ -9,7 +9,7 @@ const { Op } = require('sequelize');
 const { Membership } = require('../../db/models')
 
 // Delete an image for a EVENT
-router.delete("/group-images/:imageId", requireAuth, async (req, res) => {
+router.delete("/:imageId", requireAuth, async (req, res) => {
   try {
     const imageId = req.params.imageId;
     const userId = req.user.id;
