@@ -91,14 +91,15 @@ router.get('/:groupId', async (req, res) => {
   if (!group) {
     return res.status(404).json({ message: "Group couldn't be found" });
   }
-  res.status(200).json(group);
-  const groupProj = group.toJSON();
 
   const numMembers = await Membership.count({ where: { groupId } });
 
+  const groupProj = group.toJSON();
   groupProj.numMembers = numMembers;
-  res.json(groupProj);
+
+  res.status(200).json(groupProj);
 });
+
 
 // Create a Group
 router.post("/", requireAuth, async (req, res) => {
