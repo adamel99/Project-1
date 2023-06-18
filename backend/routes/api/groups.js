@@ -9,6 +9,7 @@ const { Op } = require('sequelize');
 const { Group } = require('../../db/models');
 const { Membership } = require('../../db/models');
 const { validGroup } = require("../../utils/auth");
+const { checkIfExist } = require("../../utils/validation");
 
 
 
@@ -77,7 +78,13 @@ router.get('/:groupId', async (req, res) => {
   const group = await Group.findByPk(groupId, {
     include: [
       { model: GroupImage, attributes: ['id', 'url', 'preview'] },
-      { model: User, as: 'Organizer', attributes: ['id', 'firstName', 'lastName'] },
+      {
+        model: User,
+        as: "Organizer",
+        attributes: {
+          exclude: ["hashedPassword", "email", "createdAt", "updatedAt", "username"],
+        },
+      },
       { model: Venue, attributes: ['id', 'groupId', 'address', 'city', 'state', 'lat', 'lng'] },
     ],
   });
@@ -85,6 +92,12 @@ router.get('/:groupId', async (req, res) => {
     return res.status(404).json({ message: "Group couldn't be found" });
   }
   res.status(200).json(group);
+  const groupProj = group.toJSON();
+
+  const numMembers = await Membership.count({ where: { groupId } });
+
+  groupProj.numMembers = numMembers;
+  res.json(groupProj);
 });
 
 // Create a Group
@@ -440,7 +453,7 @@ router.put('/:groupId/membership', async (req, res, next) => {
       }
     } else if (status === 'co-host') {
       const isOrganizer = userId === group.organizerId;
-      if (!isOrganizer ) {
+      if (!isOrganizer) {
         return res.status(403).json({
           message: 'Unauthorized',
         });
