@@ -321,17 +321,49 @@ router.post('/:groupId/events', (req, res) => {
 
 
 //GET ALL EVENTS
-router.get("/:groupId/events", async (req, res, next) => {
-  const groupId = req.params.groupId;
+router.get("/:groupId/events", async (req, res) => {
   try {
-    const events = await Event.findByPk(groupId);
-    res.status(200).json({
-      Event: events
+    const events = await Event.findAll({
+      where: {
+        groupId: req.params.groupId,
+      },
+      include: [
+        { model: Group, attributes: ["id", "name", "city", "state"] },
+        { model: Venue, attributes: ["id", "city", "state"] },
+      ],
+      attributes: {
+        exclude: ["capacity", "price", "createdAt", "updatedAt", "description"],
+        include: ["groupId"],
+      },
     });
-  } catch (err) {
-    next(err);
+    if (events.length === 0) {
+      throw new Error("No events found.");
+    }
+    const eventArr = await Promise.all(
+      events.map(async (event) => {
+        const eventObj = event.toJSON();
+        const attendance = await Attendance.count({
+          where: {
+            eventId: event.id,
+            status: "attending",
+          },
+        });
+        const eventImage = await EventImage.findOne({
+          where: {
+            eventId: event.id,
+          },
+        });
+        eventObj.numAttending = attendance;
+        eventObj.previewImage = eventImage;
+        return eventObj;
+      })
+    );
+    res.json({ Events: eventArr });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
+
 
 //REQUEST MEMBERSHIP TO A GROUP
 router.post('/:groupId/membership', async (req, res, next) => {
