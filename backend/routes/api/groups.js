@@ -9,7 +9,7 @@ const { Op } = require('sequelize');
 const { Group } = require('../../db/models');
 const { Membership } = require('../../db/models');
 const { validGroup } = require("../../utils/auth");
-const { Sequelize } = require('sequelize');
+
 
 
 
@@ -43,14 +43,32 @@ router.get("/", async (req, res) => {
 
 
 // Get all Groups joined or organized by the Current User
-router.get('/current', requireAuth, async (req, res, next) => {
-  try {
-    const user = req.user;
-    const groups = await Group.findAll({ where: { organizerId: user.id } });
-    res.status(200).json({ Groups: groups });
-  } catch (err) {
-    next(err);
+router.get("/current", requireAuth, async (req, res) => {
+  const groups = await Group.findAll({
+    where: { organizerId: req.user.id },
+    raw: true,
+  });
+  for (let group of groups) {
+    const numMembers = await Membership.count({
+      where: {
+        groupId: group.id,
+        status: {
+          [Op.not]: "pending",
+        },
+      },
+    });
+    const previewImage = await GroupImage.findOne({
+      where: {
+        groupId: group.id,
+        preview: true,
+      },
+    });
+    group.numMembers = numMembers;
+    group.previewImage = previewImage ? previewImage.url : null;
   }
+  res.json({
+    Groups: groups,
+  });
 });
 
 // // Get details of a Group from an id
