@@ -8,6 +8,8 @@ const { EventImage } = require('../../db/models');
 const { Event } = require('../../db/models');
 const { ResultWithContextImpl } = require('express-validator/src/chain');
 const { Attendance } = require('../../db/models')
+const { Op } = require("sequelize");
+
 
 
 // ADD IMAGE TO EVENT
