@@ -482,7 +482,7 @@ router.put("/:groupId/membership", requireAuth, async (req, res) => {
 
 
 // Get all members of a group specified by its id
-router.get('/:groupId/members', async (req, res, next) => {
+router.get('/:groupId/membership', async (req, res, next) => {
   try {
     const { groupId } = req.params;
     const group = await Group.findByPk(groupId);
