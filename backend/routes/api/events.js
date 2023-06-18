@@ -146,127 +146,151 @@ router.put("/:eventId", requireAuth, async (req, res) => {
 
 
 // REQUEST ATTENDANCE TO EVENT
-router.post('/:eventId/attendance', async (req, res, next) => {
+router.post("/:eventId/attendance", requireAuth, async (req, res) => {
   try {
-    const { eventId } = req.params;
-    const event = await Event.findByPk(eventId);
+    const eventIdentifier = req.params.eventId;
+    const userIdentifier = req.user.id;
+    const event = await Event.findByPk(eventIdentifier);
     if (!event) {
-      return res.status(404).json({
-        message: 'Event couldn\'t be found',
-      });
+      throw new Error("Event couldn't be found");
     }
-    const isOrganizerOrCoHost = req.user && (req.user.id === event.organizerId || req.user.id === event.coHostId);
-    const attendees = await Attendance.findAll({
+    const isMember = await Membership.findOne({
       where: {
-        eventId,
+        userId: userIdentifier,
+        groupId: event.groupId,
+        status: { [Op.not]: "pending" },
       },
-      include: [
-        {
-          model: User,
-          attributes: ['id', 'firstName', 'lastName'],
-        },
-      ],
     });
-    const filteredAttendees = isOrganizerOrCoHost
-      ? attendees
-      : attendees.filter((attendee) => attendee.status !== 'pending');
-    res.status(200).json({
-      Attendees: filteredAttendees.map((attendee) => ({
-        id: attendee.User.id,
-        firstName: attendee.User.firstName,
-        lastName: attendee.User.lastName,
-        Attendance: {
-          status: attendee.status,
-        },
-      })),
+    if (!isMember) {
+      throw new Error("Unauthorized");
+    }
+    const attendanceEx = await Attendance.findOne({
+      where: {
+        userId: userIdentifier,
+        eventId: eventIdentifier,
+      },
     });
-  } catch (err) {
-    next(err);
+    if (attendanceEx && attendanceEx.status === "pending") {
+      return res.status(400).json({ message: "Attendance has already been requested" });
+    }
+    if (attendanceEx && attendanceEx.status === "attending") {
+      return res.status(400).json({ message: "User is already an attendee of the event" });
+    }
+    const attendance = await Attendance.create({
+      status: "pending",
+      userId: userIdentifier,
+      eventId: eventIdentifier,
+    });
+    return res.json({
+      userIdentifier: attendance.userId,
+      status: attendance.status,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
+
 //CHANGE ATTENDANCE STATUS
-router.put('/:eventId/attendance', async (req, res, next) => {
+router.put("/:eventId/attendance", requireAuth, async (req, res) => {
   try {
-    const { eventId } = req.params;
+    const eventId = req.params.eventId;
+    const currUserId = req.user.id;
     const { userId, status } = req.body;
+    if (!userId || !status) {
+      return res.status(400).json({ message: "Please provide userId and status" });
+    }
+    if (status === "pending") {
+      return res.status(400).json({ message: "Cannot change an attendance status to pending" });
+    }
+
     const event = await Event.findByPk(eventId);
     if (!event) {
-      return res.status(404).json({
-        message: 'Event couldn\'t be found',
-      });
+      return res.status(404).json({ message: "Event couldn't be found" });
     }
-    const isOrganizerOrCoHost = req.currentUser && (req.user.id === event.organizerId || req.user.id === event.coHostId);
-    const attendance = await Attendance.findOne({
+
+    const group = await Group.findByPk(event.groupId);
+
+    const isCoHost = await Membership.findOne({
       where: {
-        eventId,
-        userId,
+        userId: currUserId,
+        groupId: event.groupId,
+        status: "co-host",
       },
     });
+    const isOrganizer = currUserId === group.organizerId;
+    if (!isCoHost && !isOrganizer) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const attendance = await Attendance.findOne({
+      where: {
+        userId,
+        eventId,
+      },
+      attributes: ["id", "eventId", "userId", "status"],
+    });
     if (!attendance) {
-      return res.status(404).json({
-        message: 'Attendance between the user and the event does not exist',
-      });
+      return res.status(404).json({ message: "Attendance between the user and the event does not exist" });
     }
-    if (status === 'pending') {
-      return res.status(400).json({
-        message: 'Cannot change an attendance status to pending',
-      });
-    }
-    attendance.status = status;
-    await attendance.save();
-    res.status(200).json({
+
+    await attendance.update({ status }, { where: { userId, eventId } });
+
+    res.json({
       id: attendance.id,
       eventId: attendance.eventId,
       userId: attendance.userId,
       status: attendance.status,
     });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
+
 //GET ALL ATTENDEES OF EVENT BY ITS ID
-router.get('/:eventId/attendees', async (req, res, next) => {
+router.get("/:eventId/attendees", async (req, res) => {
   try {
-    const { eventId } = req.params;
+    const eventId = req.params.eventId;
+    let userId;
+    if (req.user) {
+      userId = req.user.id;
+    }
     const event = await Event.findByPk(eventId);
     if (!event) {
-      return res.status(404).json({
-        message: 'Event couldn\'t be found',
-      });
-    };
-    const isOrganizerOrCoHost = req.user && (req.user.id === event.organizerId || req.user.id === event.coHostId);
-    const attendees = await Attendance.findAll({
+      return res.status(404).json({ message: "Event couldn't be found" });
+    }
+    const group = await Group.findByPk(event.groupId);
+    const isCoHost = await Membership.findOne({
       where: {
-        eventId,
-      },
-      include: {
-        model: User,
-        attributes: ['id', 'firstName', 'lastName'],
+        userId,
+        groupId: event.groupId,
+        status: "co-host",
       },
     });
-    const formattedAttendees = attendees.map((attendance) => ({
-      id: attendance.userId,
-      firstName: attendance.userId.firstName,
-      lastName: attendance.userId.lastName,
-      Attendance: {
-        status: attendance.status,
-      },
-    }));
-    if (!isOrganizerOrCoHost) {
-      const filteredAttendees = formattedAttendees.filter((attendee) => attendee.Attendance.status !== 'pending');
-      return res.status(200).json({
-        Attendees: filteredAttendees,
-      });
-    };
-    res.status(200).json({
-      Attendees: formattedAttendees,
+    const isOrganizer = group.organizerId === userId;
+    let where = { eventId };
+    if (!(isOrganizer || isCoHost)) {
+      where = { status: { [Op.not]: "pending" }, eventId };
+    }
+    const attendees = await Attendance.findAll({
+      where,
+      attributes: ["status", "userId"],
     });
-  } catch (err) {
-    next(err);
+    const users = await User.findAll({
+      attributes: ["id", "firstName", "lastName"],
+      raw: true,
+    });
+    const Attendees = attendees.map((attendance) => {
+      const user = users.find((user) => user.id === attendance.userId);
+      return { userId: user.id, firstName: user.firstName, lastName: user.lastName, Attendance: { status: attendance.status } };
+    });
+    return res.status(200).json({ Attendees });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
+
 
 //DELETE ATTENDANCE
 router.delete('/:eventId/attendance', async (req, res, next) => {

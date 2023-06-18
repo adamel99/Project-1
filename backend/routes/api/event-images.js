@@ -9,36 +9,32 @@ const { Op } = require('sequelize');
 const { Membership } = require('../../db/models')
 
 // Delete an image for a EVENT
-router.delete('/:imageId', async (req, res, next) => {
+router.delete("/group-images/:imageId", requireAuth, async (req, res) => {
   try {
-    const { imageId } = req.params;
-    const image = await EventImage.findByPk(imageId);
-    if (!image) {
-      return res.status(404).json({
-        message: 'Event Image couldn\'t be found',
-      });
+    const imageId = req.params.imageId;
+    const userId = req.user.id;
+    const groupImage = await GroupImage.findByPk(imageId);
+    if (!groupImage) {
+      return res.status(404).json({ message: "Group Image couldn't be found" });
     }
-    console.log(image.eventId)
-    const event = await Event.findByPk(image.eventId);
-    if (!event) {
-      return res.status(404).json({
-        message: 'Event couldn\'t be found',
-      });
-    }
-    const isAuthorized = req.user && (req.user.id === event.organizerId || req.user.id === event.coHostId);
-    if (!isAuthorized) {
-      return res.status(403).json({
-        message: 'Only the organizer or co-host of the event may delete an image',
-      });
-    }
-    await image.destroy();
-    res.status(200).json({
-      message: 'Successfully deleted',
+    const group = await Group.findByPk(groupImage.groupId);
+    const isCoHost = await Membership.findOne({
+      where: {
+        groupId: group.id,
+        userId,
+        status: "co-host",
+      },
     });
-  } catch (err) {
-    next(err);
+    if (!(group.organizerId === userId || isCoHost)) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    await groupImage.destroy();
+    res.json({ message: "Successfully deleted" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
+
 
 
 module.exports = router;
