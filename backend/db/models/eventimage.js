@@ -6,7 +6,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class EventImage extends Model {
     static associate(models) {
-      EventImage.belongsTo(models.Event, { foreignKey: 'eventId' })
+      EventImage.belongsTo(models.Event, { foreignKey: 'eventId', onDelete: 'CASCADE' })
     }
   }
   EventImage.init({
