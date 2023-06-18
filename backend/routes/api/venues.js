@@ -5,8 +5,7 @@ const { Venue } = require('../../db/models');
 const { Group } = require('../../db/models');
 const { User } = require('../../db/models');
 const { GroupImage } = require('../../db/models');
-const { validVenue, checkAuthorization } = require("../../utils/auth");
-const { checkIfExist } = require("../../utils/validation");
+const { validVenue } = require("../../utils/auth");
 const { Membership } = require('../../db/models')
 
 // Edit a Venue by ID
@@ -15,7 +14,9 @@ router.put("/:venueId", requireAuth, async (req, res) => {
   const userId = req.user.id;
 
   const venue = await Venue.findByPk(venueId);
-  checkIfExist(venue, "Venue couldn't be found");
+  if (!venue) {
+    return res.status(404).json({ message: "Venue couldn't be found" });
+  }
 
   const isOrganizer = await Group.findOne({
     where: { id: venue.groupId, organizerId: userId },
@@ -27,13 +28,17 @@ router.put("/:venueId", requireAuth, async (req, res) => {
       groupId: venue.groupId,
     },
   });
-  checkAuthorization(isOrganizer || isCoHost);
+  if (!isOrganizer && !isCoHost) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
   await venue.update(validVenue(req.body));
-  const venueObj = venue.toJSON();
-  delete venueObj.createdAt, delete venueObj.updatedAt;
-  res.json(venueObj);
+  const venueEe = venue.toJSON();
+  delete venueEe.createdAt;
+  delete venueEe.updatedAt;
+  res.json(venueEe);
 });
+
 
 
 module.exports = router;

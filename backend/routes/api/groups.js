@@ -13,7 +13,6 @@ const { Attendance } = require('../../db/models');
 
 
 
-
 // Get all Groups
 router.get("/", async (req, res) => {
   const groups = await Group.findAll({
@@ -105,12 +104,12 @@ router.get('/:groupId', async (req, res) => {
 router.post("/", requireAuth, async (req, res) => {
   const newGroup = await Group.create({
     organizerId: req.user.id,
-    ...validGroup(req.body),
+    ...req.body,
   });
 
-  res.status(201);
-  res.json(newGroup);
+  res.status(201).json(newGroup);
 });
+
 
 // Add an Image to a Group based on the Group's id
 router.post('/:groupId/images', async (req, res) => {
