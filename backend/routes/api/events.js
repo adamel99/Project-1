@@ -36,15 +36,31 @@ router.post('/:eventId/images', async (req, res) => {
 });
 
 //GET ALL EVENTS
-router.get("/", async (req, res, next) => {
-  try {
-    const events = await Event.findAll({ attributes: { exclude: ['description'] } });
-    res.status(200).json({
-      Events: events
+router.get("/", async (req, res) => {
+  const options = validQuery(req.body);
+  const events = await Event.findAll({
+    include: [
+      { model: Group, attributes: ["id", "name", "city", "state"] },
+      { model: Venue, attributes: ["id", "city", "state"] },
+    ],
+    attributes: { exclude: ["capacity", "price", "createdAt", "updatedAt"] },
+    ...options,
+  });
+  const eventBlock = [];
+  for (const event of events) {
+    const eventTt = event.toJSON();
+    const attendance = await Attendance.count({
+      where: { eventId: event.id, status: "attending" },
     });
-  } catch (err) {
-    next(err);
+    const eventImg = await EventImage.findOne({
+      where: { eventId: event.id },
+    });
+    eventTt.numAttending = attendance;
+    eventTt.previewImage = eventImg ? eventImg.url : "no image";
+    eventBlock.push(eventTt);
   }
+
+  res.json({ Events: eventBlock });
 });
 
 // GET DETAILS OF EVENT BY ID
