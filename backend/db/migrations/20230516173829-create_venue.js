@@ -13,7 +13,7 @@ module.exports = {
         autoIncrement: true
       },
       groupId: {
-        references: { model: 'Groups', key: 'id'},
+        references: { model: 'Groups', key: 'id', allowNull: false},
         type: Sequelize.INTEGER,
         allowNull: false,
         onDelete: "CASCADE"

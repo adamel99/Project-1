@@ -14,11 +14,13 @@ module.exports = {
       },
       eventId: {
         references: {model: 'Events', key: 'id'},
+        onDelete: "CASCADE",
         type: Sequelize.INTEGER,
         allowNull: false
       },
       userId: {
         references: {model: 'Users', key: 'id'},
+        onDelete: "CASCADE",
         type: Sequelize.INTEGER,
         allowNull: false
       },

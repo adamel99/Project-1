@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   class Venue extends Model {
     static associate(models) {
       Venue.hasMany(models.Event, {foreignKey:"venueId"})
-      Venue.belongsTo(models.Group, { foreignKey: 'groupId', onDelete: 'CASCADE' });
+      Venue.belongsTo(models.Group, { foreignKey: 'groupId' });
     }
   }
   Venue.init({

@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Attendance.init({
-    eventId: { type: DataTypes.INTEGER, allowNull: false },
-    userId: { type: DataTypes.INTEGER, allowNull: false },
+    eventId: { type: DataTypes.INTEGER, allowNull: false, onDelete: "CASCADE" },
+    userId: { type: DataTypes.INTEGER, allowNull: false, onDelete: "CASCADE" },
     status: { type: DataTypes.ENUM('pending', 'waitlist', 'attending'), allowNull: false },
   }, {
     sequelize,

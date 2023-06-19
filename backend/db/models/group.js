@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       organizerId: {
         type: DataTypes.INTEGER,
+        onDelete: "CASCADE",
         allowNull: false,
         validate: {
           notNull: { msg: 'Organizer ID is required' },

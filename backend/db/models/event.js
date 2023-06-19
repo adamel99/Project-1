@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Event.init({
     venueId: { type: DataTypes.INTEGER, allowNull: false },
-    groupId: { type: DataTypes.INTEGER, allowNull: false },
+    groupId: { type: DataTypes.INTEGER, allowNull: false, onDelete: "CASCADE" },
     name: { type: DataTypes.STRING, allowNull: false },
     description: { type: DataTypes.TEXT, allowNull: false },
     type: { type: DataTypes.ENUM('Online', 'In person'), allowNull: false },

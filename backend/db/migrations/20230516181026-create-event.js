@@ -7,20 +7,22 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Events', {
       id: {
-        // allowNull: false,
+        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
       venueId: {
         references: {model: 'Venues', key: 'id'},
+        onDelete: "CASCADE",
         type: Sequelize.INTEGER,
         allowNull: false
       },
       groupId: {
         references: {model: 'Groups', key: 'id'},
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        onDelete: "CASCADE"
       },
       name: {
         type: Sequelize.STRING,
