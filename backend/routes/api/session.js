@@ -58,6 +58,15 @@ router.post("/", validateLogin, async (req, res, next) => {
   });
 });
 
+// Logout
+router.delete(
+  '/',
+  (_req, res) => {
+      res.clearCookie('token');
+      return res.json({ message: 'success' });
+  }
+);
+
 // GET CURRENT USER
 router.get('/', (req, res) => {
   if (req.user) {
@@ -76,6 +85,8 @@ router.get('/', (req, res) => {
     res.status(200).json({ user: null });
   }
 });
+
+
 
 
 
