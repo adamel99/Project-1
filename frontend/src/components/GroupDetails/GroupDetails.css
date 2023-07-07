@@ -1,0 +1,45 @@
+.modified-group-details__group-section {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.modified-group-details__image-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: black solid 1px;
+}
+
+.modified-group-details__group-image {
+    width: 500px;
+}
+
+.modified-group-details {
+    margin-bottom: 20px;
+}
+
+.modified-container {
+    display: flex;
+    margin-top: 120px;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.modified-group-details__join-group-btn {
+    background-color: teal;
+    color: aliceblue;
+    cursor: pointer;
+}
+
+.createEvent {
+    background-color: teal;
+    color: aliceblue;
+    cursor: pointer;
+}
+
+.modified-group-details__group-status-container {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}

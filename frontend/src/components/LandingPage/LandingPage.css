@@ -1,0 +1,72 @@
+.main-content {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    gap: 3rem;
+    font-size: 20px;
+    margin: 3rem auto;
+    align-items: center;
+    margin-top: 8rem;
+  }
+
+  .main-content-cards-container > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px
+  }
+  .main-content-meetup-works {
+    text-align: center;
+    margin-top: 5px;
+  }
+
+  .main-content-cards-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10rem;
+    padding-left: 100px;
+  }
+
+
+  .main-content-join-meetup-btn {
+    background-color: hsl(188, 91%, 29%);
+    color: #fff;
+    border: 1px solid black;
+    padding: 0.3rem 0.6rem;
+    box-shadow: 2px 1px 0 0 black;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  h2 {
+    color: blue;
+  }
+
+  h1 {
+    font-size: 25px;
+    color: blue
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .main-content-image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .start-new-group-btn-disabled {
+    color: gray;
+  }
+
+  .main-content-title {
+    display: flex;
+    flex-direction: column;
+    margin-left: 2rem;
+  }
+
+  .navlink{
+    color: blue
+  }

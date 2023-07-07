@@ -1,0 +1,69 @@
+.my-form {
+    max-width: 75%;
+    margin: 0 auto;
+  }
+
+  .my-form__heading {
+    margin-bottom: 20px;
+    font-size: bold;
+    font-weight: 200;
+    color: blue;
+    border-bottom: 0.3em solid rgba(20, 50, 200, 0.218);
+  }
+
+  .my-form__location-input-section,
+  .my-form__group-name-input-section,
+  .my-form__group-desc-input-section,
+  .my-form__final-steps-section {
+    margin-bottom: 30px;
+    border-bottom: 0.3em solid rgba(20, 50, 200, 0.218);
+  }
+
+  .my-form__group-desc-prompts {
+    padding-inline-start: 20px;
+  }
+
+  .my-form__group-desc-prompts li {
+    margin-bottom: 20px;
+  }
+
+  .my-form__group-type-container p,
+  .my-form__group-status-container p,
+  .my-form__group-img-input p {
+    margin-bottom: 10px;
+  }
+
+  .my-form__submit-btn {
+    display: block;
+    width: 250px;
+    padding: 10px;
+    border: solid black;
+    background-color: blue;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 3px 1px 0 0 black;
+    margin-top: 30px;
+    /* align-items: center; */
+  }
+
+  .my-form__submission-section{
+    display: flex;
+    align-items: center;
+  }
+
+  h3 {
+    color: rgb(0, 0, 255);
+  }
+
+  /* Media Query for Mobile Devices */
+  @media (max-width: 768px) {
+    .my-form {
+      padding: 10px;
+    }
+
+    .my-form__submit-btn {
+      font-size: 14px;
+    }
+  }

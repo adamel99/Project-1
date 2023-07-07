@@ -1,0 +1,60 @@
+.update-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 200px;
+    /* background-color: beige; */
+  }
+
+  .update-location{
+    display: flex;
+    flex-direction: column;
+    width: 750px
+  }
+
+  .update-group-name-input-section{
+    display: flex;
+    flex-direction: column;
+    width: 750px;
+  }
+
+ h3{
+    font-size: 25px;
+  }
+
+  .update-group-desc-section{
+    display: flex;
+    flex-direction: column;
+    width: 750px
+  }
+
+  .update-acc-section{
+    display: flex;
+    flex-direction: column;
+    width: 750px;
+    align-items: center;
+  }
+
+  .update-submit-btn {
+    display: block;
+    width: 250px;
+    padding: 10px;
+    border: solid black;
+    background-color: blue;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 3px 1px 0 0 black;
+    margin-top: 30px;
+  }
+
+  .update-container p{
+    font-size: 18px;
+  }
+
+  body{
+    background-color: lightblue;
+  }

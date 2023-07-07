@@ -1,0 +1,6 @@
+.title-container a:not(.active-link) {
+    color: gray;
+  }
+  .active-link {
+    color: purple;
+  }
