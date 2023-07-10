@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import React, { useEffect } from "react";
 import { ViewSingleGroupThunk as getSingleGroup } from "../../store/groups";
+import DeleteGroup from "../DeleteGroup/DeleteGroup";
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 
 
 
@@ -19,7 +21,7 @@ const GroupDetails = () => {
     useEffect(() => {
         dispatch(getSingleGroup(groupId));
 
-    }, [dispatch]);
+    }, [dispatch, groupId]);
 
 
     if (!group.id || !group.Organizer) return <h3>Access Denied</h3>;
@@ -45,6 +47,10 @@ const GroupDetails = () => {
                         <h2 className="no-margin">{group.name}</h2>
                         <p>
                             {group.city}, {group.state}
+                        </p>
+                        <h3>Accessibility</h3>
+                        <p>
+                            {group.type}
                         </p>
                         <div className="modified-group-details__group-status-container">
 
@@ -75,14 +81,26 @@ const GroupDetails = () => {
                             </button>
                         )}
                         {sessionUser && sessionUser.id === groupOrganizerId && (
-                            <button
-                                className="modified-group-details__join-group-btn"
-                                onClick={() => {
-                                    history.push(`/groups/${groupId}/edit`);
-                                }}
-                            >
-                                Update
-                            </button>
+                            <p>
+                                <button
+                                    className="modified-group-details__join-group-btn"
+                                    onClick={() => {
+                                        history.push(`/groups/${groupId}/edit`);
+                                    }}
+                                >
+                                    Update
+                                </button>
+                                <button>
+                                {sessionUser && sessionUser.id === groupOrganizerId && (
+                                    <OpenModalMenuItem
+                                        itemText="Delete"
+                                        modalComponent={<DeleteGroup groupDelete={group} />}
+                                    />
+                                )}
+                                </button>
+
+                            </p>
+
                         )}
 
                     </div>

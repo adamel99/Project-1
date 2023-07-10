@@ -20,7 +20,7 @@ function createGroup(group) {
     };
 }
 
-function GetSingleGroup(group) {
+function getSingleGroup(group) {
     return {
         type: VIEW_SINGLE_GROUP,
         payload: group,
@@ -66,7 +66,7 @@ export const ViewSingleGroupThunk = (groupId) => {
 
             const group = await res.json();
             console.log("group", group);
-            dispatch(GetSingleGroup(group));
+            dispatch(getSingleGroup(group));
             return group;
         } catch (error) {
             console.error(error);
@@ -93,7 +93,7 @@ export function deleteGroupThunk(groupToDelete) {
     };
 }
 
-export const updateGroupThunk = (group, image) => {
+export const updateGroupThunk = (group) => {
     return async (dispatch) => {
         try {
             const res = await csrfFetch(`/api/groups/${group.id}`, {
@@ -142,10 +142,9 @@ const groupsReducer = (state = initialState, action) => {
         };
       }
       case UPDATE_GROUP: {
-        return {
-          ...state,
-          singleGroup: action.payload,
-        };
+        const newState = { ...state };
+        newState.singleGroup = action.payload;
+        return newState;
       }
       case CREATE_GROUP: {
         return {

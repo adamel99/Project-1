@@ -12,7 +12,7 @@ return (
 <div className="main-content">
 <div className="intro">
 <section className="main-content-title">
-<h1>LinkUp! Where Magic Happens!</h1>
+<h1>LinkUp!</h1>
       <p>
       Discover countless extraordinary individuals who share your passion for thrilling adventures or fascinating discussions on LinkUp. Join the excitement today!
       </p>

@@ -12,23 +12,29 @@ const UpdateGroup = () => {
   const user = useSelector((state) => state.session.user);
   const group = useSelector((state) => state.groups.singleGroup);
   const { groupId } = useParams();
-  const [description, setDescription] = useState(group.about);
-  const [location, setLocation] = useState(`${group.city}, ${group.state}`);
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
   const dispatch = useDispatch();
-  const [name, setName] = useState(group.name);
-  const validation = {};
+  const [name, setName] = useState("");
   const [errors, setErrors] = useState({});
-
-  const [groupType, setGroupType] = useState(group.type);
-  const [groupStatus, setGroupStatus] = useState(
-    group.private ? "Private" : "Public"
-  );
+  const [groupType, setGroupType] = useState("");
+  const [groupStatus, setGroupStatus] = useState("");
 
   useEffect(() => {
     dispatch(getSingleGroup(groupId));
   }, [dispatch, groupId]);
 
-  if (!group.id) {
+  useEffect(() => {
+    if (group) {
+      setDescription(group.about || "");
+      setLocation(`${group.city}, ${group.state}`);
+      setName(group.name || "");
+      setGroupType(group.type || "");
+      setGroupStatus(group.private ? "Private" : "Public");
+    }
+  }, [group]);
+
+  if (!group) {
     return null;
   }
 
@@ -39,6 +45,7 @@ const UpdateGroup = () => {
   const handleGroupSubmit = async (e) => {
     e.preventDefault();
 
+    const validation = {};
     if (!location) {
       validation.location = "Location is required";
     }
@@ -49,10 +56,10 @@ const UpdateGroup = () => {
       validation.description =
         "Description must be at least 50 characters long";
     }
-    if (!groupType || groupType === "(select one)") {
+    if (!groupType || groupType === "(Choose one)") {
       validation.groupType = "Group Type is required";
     }
-    if (!groupStatus || groupStatus === "(select one)") {
+    if (!groupStatus || groupStatus === "(Choose one)") {
       validation.groupStatus = "Visibility Type is required";
     }
     if (Object.keys(validation).length) {
@@ -60,7 +67,7 @@ const UpdateGroup = () => {
       return;
     }
 
-    const [city, state] = location.split(", ");
+    const [city, state] = location?.split(", ");
 
     const updatedGroup = {
       id: group.id,
@@ -72,6 +79,8 @@ const UpdateGroup = () => {
       state,
     };
 
+    console.log("updatedGroup", updatedGroup);
+
     const res = await dispatch(updateGroup(updatedGroup, groupId));
 
     if (res.id) {
@@ -80,6 +89,8 @@ const UpdateGroup = () => {
       setErrors(res.errors);
     }
   };
+
+  console.log("errors", errors);
 
   return (
     <div className="update-container">
@@ -98,7 +109,7 @@ const UpdateGroup = () => {
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
-        {errors.location && <p error={errors.location} />}
+        {errors.location && <p className="errors">{errors.location}</p>}
       </section>
       <section className="update-group-name-input-section">
         <h3>Group Name</h3>
@@ -111,7 +122,8 @@ const UpdateGroup = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        {errors.name && <p error={errors.name} />}
+        {/* {errors.name && <p error={errors.name} />} */}
+        {errors.name && <p className='errors'>{errors.name}</p>}
       </section>
       <section className="update-group-desc-section">
         <h3>Group Description</h3>
@@ -126,22 +138,22 @@ const UpdateGroup = () => {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         ></textarea>
-        {errors.description && <p error={errors.description} />}
+        {errors.description && <p className='errors'>{errors.description}</p>}
       </section>
       <section className="update-acc-section">
         <h3>Accessibility</h3>
-        <div className="update-group-type-container">
+        <div class="update-group-type-container">
           <p>Online or In-person</p>
           <select
-            className="update-group-type-input"
+            class="update-group-type-input"
             value={groupType}
             onChange={(e) => setGroupType(e.target.value)}
           >
-            <option value="(select one)">(Choose one)</option>
-            <option value="online">Online</option>
-            <option value="in person">In Person</option>
+            {/* <option value="(select one)">(Choose one)</option> */}
+            <option value="Online">Online</option>
+            <option value="In person">In-person</option>
           </select>
-          {errors.groupType && <p error={errors.groupType} />}
+          {errors.groupType && <p className="errors">{errors.groupType}</p>}
         </div>
         <div className="update-group-status-container">
           <p>Private or Public</p>
@@ -154,7 +166,8 @@ const UpdateGroup = () => {
             <option value="Private">Private</option>
             <option value="Public">Public</option>
           </select>
-          {errors.groupStatus && <p error={errors.groupStatus} />}
+          {/* {errors.groupStatus && <p error={errors.groupStatus} />} */}
+          {errors.groupStatus && <p className='errors'>{errors.groupStatus}</p>}
         </div>
       </section>
       <section className="update-submission-section">

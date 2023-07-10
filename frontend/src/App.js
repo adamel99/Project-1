@@ -9,6 +9,10 @@ import CreateGroupsForm from "./components/CreateGroupsForm/CreateGroupsForm";
 import GroupDetails from "./components/GroupDetails/GroupDetails";
 import LandingPage from "./components/LandingPage/LandingPage";
 import UpdateGroup from "./components/UpdateGroup/UpdateGroup";
+import ManageGroup from "./components/ManageGroup/ManageGroup";
+import EventDetails from "./EventDetails/EventDetails";
+import EventList from "./components/EventList/EvenList";
+import EventCreator from "./components/CreateEvent/CreateEvent";
 
 
 function App() {
@@ -26,17 +30,29 @@ function App() {
           <Route exact path="/">
             <LandingPage />
           </Route>
+          <Route exact path="/groups/new">
+            <CreateGroupsForm />
+          </Route>
           <Route exact path="/groups">
             <ViewAllGroups />
           </Route>
-          <Route exact path="/groups/new">
-            <CreateGroupsForm />
+          <Route path="/groups/current">
+            <ManageGroup />
           </Route>
           <Route exact path="/groups/:groupId">
             <GroupDetails />
           </Route>
-          <Route path="/groups/:groupId/edit">
+          <Route exact path="/groups/:groupId/edit">
             <UpdateGroup />
+          </Route>
+          <Route path="/groups/:groupId/events/new">
+            <EventCreator />
+          </Route>
+          <Route path="/events/:eventId">
+            <EventDetails />
+          </Route>
+          <Route exact path="/events">
+            <EventList />
           </Route>
         </Switch>}
     </>

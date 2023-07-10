@@ -2,13 +2,14 @@
     display: flex;
     flex-direction: row;
     gap: 30px;
+
 }
 
 .modified-group-details__image-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border: black solid 1px;
+    border: beige
 }
 
 .modified-group-details__group-image {
@@ -33,13 +34,35 @@
 }
 
 .createEvent {
-    background-color: teal;
-    color: aliceblue;
+    display: block;
+    width: 250px;
+    padding: 10px;
+    border: solid black;
+    background-color: blue;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
+    box-shadow: 3px 1px 0 0 black;
+    margin-top: 30px;
 }
 
 .modified-group-details__group-status-container {
     display: flex;
     flex-direction: row;
     gap: 1rem;
+}
+
+.modified-group-details__join-group-btn {
+    display: block;
+    width: 250px;
+    padding: 10px;
+    border: solid black;
+    background-color: blue;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 3px 1px 0 0 black;
+    margin-top: 30px;
 }

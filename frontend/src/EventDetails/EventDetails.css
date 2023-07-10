@@ -1,0 +1,22 @@
+.event-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    /* width: 1000px; */
+  }
+
+  .group-details__join-group-btn {
+    display: block;
+    width: 250px;
+    padding: 10px;
+    border: solid black;
+    background-color: blue;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 0 black;
+    margin-top: 30px;
+  }
