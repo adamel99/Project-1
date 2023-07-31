@@ -12,8 +12,6 @@ const EventList = () => {
   useEffect(() => {
     dispatch(getAllEvents());
   }, [dispatch]);
-
-//   console.log("allEvents", allEvents);
   if (!allEvents) {
     return (
       <div className="loading-container">
