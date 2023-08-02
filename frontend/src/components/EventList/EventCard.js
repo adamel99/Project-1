@@ -22,7 +22,7 @@ export const EventCard = ({ event }) => {
                     <h2 className="event-card-title">{event.name}</h2>
                     <div className="event-card-location">
                         <p className="event-card-description">{event.description}</p>
-                        {event.Group.city}, {event.Group.state}
+                        {event.city}, {event.state}
                     </div>
                     {date &&
                         <span className="event-card-date">

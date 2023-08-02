@@ -4,8 +4,10 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { createGroupThunk as CreateGroups } from "../../store/groups";
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const CreateGroupsForm = () => {
+  const sessionUser = useSelector((state) => state.session.user);
   const dispatch = useDispatch();
   const history = useHistory();
   const [formData, setFormData] = useState({});
@@ -33,8 +35,8 @@ const CreateGroupsForm = () => {
     if (!formData.groupStatus) {
       validation.visibility = "Visibility type is required";
     }
-    if (!formData.imgUrl) {
-      validation.image = "Image is required";
+    if (!formData.previewImage) {
+      validation.previewImage = "Image is required";
     }
 
     setErrors(validation);
@@ -42,19 +44,24 @@ const CreateGroupsForm = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    console.log('formdata', formData)
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
   // const handleGroupSubmit = async (e) => {
   async function handleGroupSubmit(e) {
     e.preventDefault();
+    console.log('an empty string')
     if (Object.keys(errors).length > 0) {
+      console.log("Form has errors:", errors);
       return;
     }
 
     setInflight(true);
-    const { location, name, desc, groupType, groupStatus } = formData;
+    console.log('set in flight')
+    const { location, name, desc, groupType, groupStatus, previewImage } = formData;
     const [city, state] = location.split(", ");
+    console.log('the state', state)
 
     const newGroup = {
       name,
@@ -63,13 +70,16 @@ const CreateGroupsForm = () => {
       private: groupStatus === "Private",
       city,
       state,
-      organizer: state.session.user.id
+      organizer: sessionUser,
+      previewImage,
     };
-
-    const res = await dispatch(CreateGroups(newGroup));
-    console.log('res');
-    console.log()
-    history.push(`/groups/${res.id}`);
+    try {
+      const res = await dispatch(CreateGroups(newGroup));
+      history.push(`/groups/${res.id}`);
+    } catch (error) {
+      console.error("Error while creating group:", error);
+      setInflight(false);
+    }
   };
   console.log('a sentence')
   return (
@@ -139,11 +149,12 @@ const CreateGroupsForm = () => {
             <select
               className="meetup-form__group-type-input"
               name="groupType"
-              value={formData.groupType || "online"}
+              value={formData.groupType || ''}
               onChange={handleInputChange}
             >
-              <option value="online">Online</option>
-              <option value="in person">In Person</option>
+              <option value="">Select an option</option>
+              <option value="Online">Online</option>
+              <option value="In person">In Person</option>
             </select>
             {errors.type && inFlight && <p style={{ color: "red" }}>{errors.type}</p>}
           </div>
@@ -164,9 +175,9 @@ const CreateGroupsForm = () => {
             <p>Please add an image URL for your group below:</p>
             <input
               placeholder="Image URL"
-              name="imgUrl"
-              type='text'
-              value={formData.imgUrl || ""}
+              name="previewImage"
+              type='file'
+              // value={formData.previewImage || ""}
               onChange={handleInputChange}
             />
             {errors.image && inFlight && <p style={{ color: "red" }}>{errors.image}</p>}

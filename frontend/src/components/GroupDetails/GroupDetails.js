@@ -38,8 +38,8 @@ const GroupDetails = () => {
                 <div className="modified-group-details__image-container">
                     <img
                         className="modified-group-details__group-image"
-                        src="https://secure.meetupstatic.com/next/images/shared/online_events.svg?w=1080"
-                        alt="img"
+                        src={group.previewImage}
+                        alt="Group Preview"
                     ></img>
                 </div>
                 <div className="modified-group-details__group-info-container">

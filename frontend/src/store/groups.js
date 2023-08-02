@@ -4,6 +4,7 @@ const VIEW_SINGLE_GROUP = "groups/ViewSingleGroup";
 const CREATE_GROUP = "groups/createGroup";
 const DELETE_GROUP = "groups/deleteGroup";
 const UPDATE_GROUP = "groups/updateGroup";
+const CREATE_GROUP_IMAGE = 'groups/createGroupImage'
 
 
 function GetAllGroups(groups) {
@@ -40,6 +41,12 @@ function updateGroup(group) {
         payload: group,
     };
 }
+
+const createGroupImage = (image) => ({
+  type: CREATE_GROUP_IMAGE,
+  payload: image,
+});
+
 
 const initialState = { allGroups: {}, singleGroup: {} };
 export const ViewAllGroupsThunk = () => {
@@ -113,25 +120,41 @@ export const updateGroupThunk = (group) => {
     };
 };
 
-export const createGroupThunk = (group, image) => {
+export const createGroupThunk = (group) => {
     return async (dispatch) => {
-        try {
-            const res = await csrfFetch("/api/groups", {
-                method: "POST",
-                body: JSON.stringify(group),
-            });
-            const newGroup = await res.json();
+      try {
+        const res = await csrfFetch("/api/groups", {
+          method: "POST",
+          body: JSON.stringify(group),
+        });
 
-            if (res.ok) {
-                dispatch(createGroup(newGroup));
-            }
-            return newGroup;
-        } catch (error) {
-            console.log(error);
-            return error;
+        const newGroup = await res.json();
+
+        if (res.ok) {
+          dispatch(createGroup(newGroup));
         }
+
+        return newGroup;
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
     };
-};
+  };
+
+  // create group images thunk
+  export const createGroupImagesThunk = (image, groupId) => async (dispatch) => {
+    const imgRes = await csrfFetch(`/api/groups/${groupId}/images`, {
+      method: "POST",
+      body: JSON.stringify(image),
+    });
+
+  if (imgRes.ok) {
+    const img = await imgRes.json();
+    dispatch(createGroupImage(img));
+    return img;
+  }
+  };
 
 const groupsReducer = (state = initialState, action) => {
     switch (action.type) {

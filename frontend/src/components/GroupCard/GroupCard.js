@@ -2,6 +2,7 @@ import { useHistory } from "react-router-dom";
 import React from "react";
 import "./GroupCard.css";
 
+
 const MyGroupCard = ({ customGroup }) => {
   const history = useHistory();
 
@@ -12,7 +13,7 @@ const MyGroupCard = ({ customGroup }) => {
   return (
     <article className="custom-card" onClick={handleClick}>
       <div className="custom-card__image">
-        <img src="https://e1.pxfuel.com/desktop-wallpaper/737/667/desktop-wallpaper-group-of-men-playing-basketball-sports-person-human-people-%E2%80%A2-for-you-for-mobile-sport-man-thumbnail.jpg" alt='basketball'/>
+        <img src={customGroup.previewImage} alt='basketball'/>
       </div>
       <header className="custom-card__header">
         <h2 className="custom-card__title">{customGroup.name}</h2>

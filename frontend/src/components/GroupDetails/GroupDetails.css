@@ -5,6 +5,7 @@
 
 }
 
+
 .modified-group-details__image-container {
     display: flex;
     flex-direction: column;
@@ -13,7 +14,7 @@
 }
 
 .modified-group-details__group-image {
-    width: 500px;
+    width: 100px;
 }
 
 .modified-group-details {
