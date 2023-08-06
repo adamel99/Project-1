@@ -19,7 +19,7 @@ module.exports = {
           price: 10,
           startDate: "05/10/22",
           endDate: "05/11/22",
-          previewImage: 'google.com',
+          previewImage: 'https://thumbs.dreamstime.com/z/basketball-scoring-points-action-photo-going-basket-live-game-37043542.jpg?w=992',
         },
         {
           venueId: 2,
@@ -31,7 +31,7 @@ module.exports = {
           price: 10,
           startDate: "05/12/22",
           endDate: "05/13/22",
-          previewImage: 'google.com',
+          previewImage: 'https://thumbs.dreamstime.com/z/kids-soccer-team-huddle-football-80539013.jpg?w=992',
         },
         {
           venueId: 3,
@@ -43,7 +43,7 @@ module.exports = {
           price: 10,
           startDate: "05/14/22",
           endDate: "05/15/22",
-          previewImage: 'google.com',
+          previewImage: 'https://thumbs.dreamstime.com/z/old-couple-relaxing-sitting-lotus-pose-senior-men-elderly-women-meditating-sitting-lotus-position-park-125354602.jpg?w=992',
         },
       ],
       {}

@@ -5,6 +5,7 @@ import { createEventThunk as createEvent } from "../../store/events";
 import { ViewSingleGroupThunk as getSingleGroup } from "../../store/groups";
 import { useParams, useHistory } from "react-router-dom";
 import React from "react";
+// import {saveEventImage} from '../../store/events'
 
 const EventCreator = () => {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const EventCreator = () => {
   const [eventStartDate, setEventStartDate] = useState("");
   const [eventEndDate, setEventEndDate] = useState("");
   const [isCreatingEvent, setIsCreatingEvent] = useState(false);
+
 
   useEffect(() => {
     const validation = {};
@@ -62,6 +64,7 @@ const EventCreator = () => {
       startDate: eventStartDate,
       endDate: eventEndDate,
       venueId: 1,
+      imgUrl: eventImgUrl
     };
 
     const res = await dispatch(createEvent(newEvent));
@@ -71,6 +74,8 @@ const EventCreator = () => {
       history.push(`/events/${res.id}`);
     }
   };
+
+
 
   useEffect(() => {
     dispatch(getSingleGroup(groupId));
@@ -163,7 +168,8 @@ const EventCreator = () => {
             <p style={{ color: "red" }} p>
               {eventErrors.previewImage}
             </p>
-          )}{" "}
+
+          )}
         </div>
       </section>
       <section className="event-creator__desc-section">

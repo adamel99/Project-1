@@ -3,16 +3,18 @@ import { NavLink, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import React, { useEffect } from "react";
-import { ViewSingleGroupThunk as getSingleGroup } from "../../store/groups";
+import {  ViewSingleGroupThunk as getSingleGroup } from "../../store/groups";
+import { createGroupImagesThunk as getImageGroup } from "../../store/groups";
 import DeleteGroup from "../DeleteGroup/DeleteGroup";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
+// import groupimage from "../../../../backend/db/models/groupimage";
 
 
 
 const GroupDetails = () => {
     const sessionUser = useSelector((state) => state.session.user);
     const dispatch = useDispatch();
-    const { groupId } = useParams();
+    const { groupId ,preview, url } = useParams();
     const group = useSelector((state) => state.groups.singleGroup);
 
     const groupOrganizerId = group.organizerId;
@@ -20,15 +22,21 @@ const GroupDetails = () => {
 
     useEffect(() => {
         dispatch(getSingleGroup(groupId));
+        dispatch(getImageGroup(groupId, preview, url))
+    }, [dispatch, groupId, preview, url]);
 
-    }, [dispatch, groupId]);
+    // useEffect(()=> {
+    //     dispatch(createGroupImage)
+    // })
 
-
+    console.log('Group:', group);
     if (!group.id || !group.Organizer) return <h3>Access Denied</h3>;
 
     const { firstName, lastName } = group.Organizer;
 
-
+    const groupImage = group.GroupImages && group.GroupImages.length > 0
+    ? group.GroupImages[0].url
+    : '';
     return (
         <div className="modified-group-details">
             <div className="modified-group-details">
@@ -38,9 +46,9 @@ const GroupDetails = () => {
                 <div className="modified-group-details__image-container">
                     <img
                         className="modified-group-details__group-image"
-                        src={group.previewImage}
+                        src={groupImage}
                         alt="Group Preview"
-                    ></img>
+                    />
                 </div>
                 <div className="modified-group-details__group-info-container">
                     <div className="modified-group-details__group-info">
@@ -91,12 +99,12 @@ const GroupDetails = () => {
                                     Update
                                 </button>
                                 <button>
-                                {sessionUser && sessionUser.id === groupOrganizerId && (
-                                    <OpenModalMenuItem
-                                        itemText="Delete"
-                                        modalComponent={<DeleteGroup groupDelete={group} />}
-                                    />
-                                )}
+                                    {sessionUser && sessionUser.id === groupOrganizerId && (
+                                        <OpenModalMenuItem
+                                            itemText="Delete"
+                                            modalComponent={<DeleteGroup groupDelete={group} />}
+                                        />
+                                    )}
                                 </button>
 
                             </p>

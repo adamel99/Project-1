@@ -90,7 +90,7 @@ router.get('/:groupId', async (req, res) => {
   if (!group) {
     return res.status(404).json({ message: "Group couldn't be found" });
   }
-
+  console.log('GroupImage:', group.GroupImages);
   const numMembers = await Membership.count({ where: { groupId } });
 
   const groupProj = group.toJSON();
@@ -129,11 +129,18 @@ router.post('/:groupId/images', async (req, res) => {
       url,
       preview,
     });
-    res.status(201).json({
+    // res.status(201).json({
+    //   id: groupImage.id,
+    //   url: groupImage.url,
+    //   preview: groupImage.preview,
+
+    // });
+    const response = {
       id: groupImage.id,
-      url: groupImage.url,
-      preview: groupImage.preview,
-    });
+      url: groupImage.id,
+      preview: groupImage.id
+    }
+    res.status(201).json(response)
   } catch (error) {
     res.status(400).json({ message: 'Bad Request', errors: error.errors });
   }
@@ -280,43 +287,44 @@ router.put('/venues/:venueId', (req, res) => {
 });
 
 // CREATE EVENT FOR A GROUP BY ID
-router.post('/:groupId/events', (req, res) => {
-  const groupId = req.params.groupId;
-  const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
-  const userId = req.user.id;
-
-  Group.findOne({ where: { id: groupId } })
-    .then(group => {
-      if (!group) {
-        return res.status(404).json({ message: 'Group couldn\'t be found' });
-      }
-
-      const isOrganizer = group.organizerId === userId;
-      console.log(isOrganizer)
-      if (!isOrganizer) {
-        return res.status(401).json({ message: 'Unauthorized' });
-      }
-      Event.create({ groupId, venueId, name, type, capacity, price, description, startDate, endDate })
-        .then(event => {
-          res.status(200).json(event);
-        })
-        .catch(err => {
-          if (err.name === 'SequelizeValidationError') {
-            const errors = {};
-            err.errors.forEach(error => {
-              errors[error.path] = error.message;
-            });
-            res.status(400).json({ message: 'Validation error', errors });
-          } else {
-            console.error(err);
-            res.status(501).json({ message: 'Internal Server Error' });
-          }
-        });
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ message: 'Internal Server Error' });
+router.get("/:groupId/events", async (req, res) => {
+  const events = await Event.findAll({
+    where: {
+      groupId: req.params.groupId,
+    },
+    include: [
+      { model: Group, attributes: ["id", "name", "city", "state"] },
+      {
+        model: Venue,
+        attributes: ["id", "city", "state"],
+      },
+    ],
+    attributes: {
+      exclude: ["capacity", "price", "createdAt", "updatedAt", "description"],
+      include: ["groupId"],
+    },
+  });
+  checkIfExist(events.length);
+  const eventArr = [];
+  for (const event of events) {
+    const eventObj = event.toJSON();
+    const attendance = await Attendance.count({
+      where: {
+        eventId: event.id,
+        status: "attending",
+      },
     });
+    const eventImage = await EventImage.findOne({
+      where: {
+        eventId: event.id,
+      },
+    });
+    eventObj.numAttending = attendance;
+    eventObj.previewImage = eventImage;
+    eventArr.push(eventObj);
+  }
+
+  res.json({ Events: eventArr });
 });
 
 
@@ -361,6 +369,22 @@ router.get("/:groupId/events", async (req, res) => {
     res.json({ Events: eventArr });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/:groupId/events", async (req, res) => {
+  try {
+    const groupId = req.params.groupId;
+    const event = req.body;
+    const createdEvent = await Event.create({
+      ...event,
+      groupId: groupId,
+    });
+
+    res.status(201).json(createdEvent);
+  } catch (error) {
+    console.error("Error creating event:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 

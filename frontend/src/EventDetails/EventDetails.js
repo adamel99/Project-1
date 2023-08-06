@@ -1,12 +1,13 @@
 import "./EventDetails.css";
 import { NavLink, useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { useDispatch, useSelector } from "react-redux";
+// import { useHistory } from "react-router-dom";
 import React from "react";
 import { useEffect } from "react";
 import { getSingleEventThunk as getSingleEvent } from "../store/events";
 import { ViewSingleGroupThunk as getSingleGroup } from "../store/groups";
 import OpenModalMenuItem from "../components/Navigation/OpenModalMenuItem";
-import DeleteEvent from "../DeleteEvent/DeleteEvent";
+import DeleteEvent from "../DeleteEvent/DeleteEvent"
 const EventDetails = () => {
   const sessionUser = useSelector((state) => state.session.user);
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const EventDetails = () => {
   const event = useSelector((state) => state.events.singleEvent);
   const group = useSelector((state) => state.groups.singleGroup);
 
+  // const history = useHistory();
 
   useEffect(() => {
     (async () => {
@@ -37,7 +39,7 @@ const EventDetails = () => {
       <div className="event-header">
         <h2>Event {event.name}</h2>{" "}
         <p>
-          Host: {firstName} {lastName}
+          Hosted by {firstName} {lastName}
         </p>
       </div>
       <section className="event-details__group-section">
@@ -55,24 +57,24 @@ const EventDetails = () => {
               <div className="start-to-end">
                 <p>Start Date</p>
                 <p>{event.startDate.split(" ").join(" · ")}</p>
-                <p>End Date</p>
-                <p>{event.endDate.split(" ").join(" · ")}</p>
+                <p>end Date</p>
+                <p> {event.endDate.split(" ").join(" · ")}</p>
               </div>
             </div>
             <div className="event-details-row">
-              <i class="fa-dollar-sign"></i> <p>${event.price}</p>
+              <i class="fa-solid fa-dollar-sign"></i> <p>${event.price}</p>
             </div>
             <div className="event-details-row">
-              <i class="fa-map-pin"></i>
+              <i class="fa-solid fa-map-pin"></i>
               <p>{event.type ? "In person" : "Online"}</p>
             </div>
           </div>
-          <div className="container">
+          <div className="crud-container">
             {sessionUser && sessionUser.id === groupOrganizerId && (
               <button
-                className="details__join-group-btn"
+                className="group-details__join-group-btn"
                 onClick={() => {
-                  alert("Working on it!");
+                  alert("Feature Coming Soon!");
                 }}
               >
                 Update

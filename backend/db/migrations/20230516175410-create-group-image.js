@@ -20,11 +20,11 @@ module.exports = {
       },
       url: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
       },
       preview: {
         type: Sequelize.BOOLEAN,
-        allowNull: false
+        allowNull: true
       },
       createdAt: {
         allowNull: false,

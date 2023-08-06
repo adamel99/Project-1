@@ -42,9 +42,9 @@ function updateGroup(group) {
     };
 }
 
-const createGroupImage = (image) => ({
+const createGroupImage = (preview) => ({
   type: CREATE_GROUP_IMAGE,
-  payload: image,
+  payload: preview,
 });
 
 
@@ -63,22 +63,20 @@ export const ViewAllGroupsThunk = () => {
     };
 };
 
-export const ViewSingleGroupThunk = (groupId) => {
-    return async (dispatch) => {
-        try {
-            const res = await fetch(`/api/groups/${groupId}`);
-            if (!res.ok) {
-                throw new Error("Failed to fetch group data.");
-            }
+export const ViewSingleGroupThunk = (groupId) => async (dispatch) => {
+  try {
+    const res = await fetch(`/api/groups/${groupId}`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch group data.");
+    }
 
-            const group = await res.json();
-            console.log("group", group);
-            dispatch(getSingleGroup(group));
-            return group;
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    const group = await res.json();
+    console.log("group", group);
+    dispatch(getSingleGroup(group));
+    return group;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export function deleteGroupThunk(groupToDelete) {
@@ -121,37 +119,44 @@ export const updateGroupThunk = (group) => {
 };
 
 export const createGroupThunk = (group) => {
-    return async (dispatch) => {
-      try {
-        const res = await csrfFetch("/api/groups", {
-          method: "POST",
-          body: JSON.stringify(group),
-        });
+  return async (dispatch) => {
+    try {
+      const imageURL = group.preview;
+      const res = await csrfFetch("/api/groups", {
+        method: "POST",
+        body: JSON.stringify(group),
+      });
 
+      if (res.ok) {
         const newGroup = await res.json();
-
-        if (res.ok) {
-          dispatch(createGroup(newGroup));
-        }
-
+        newGroup.preview = imageURL;
+        dispatch(createGroup(newGroup));
         return newGroup;
-      } catch (error) {
-        console.log(error);
-        return error;
+      } else {
+
+        const errorData = await res.json();
+        throw new Error(errorData.message);
       }
-    };
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   };
+};
 
   // create group images thunk
-  export const createGroupImagesThunk = (image, groupId) => async (dispatch) => {
+  export const createGroupImagesThunk = (groupId, preview) => async (dispatch) => {
+    console.log('groupId', groupId)
+    console.log('preview object', preview)
     const imgRes = await csrfFetch(`/api/groups/${groupId}/images`, {
       method: "POST",
-      body: JSON.stringify(image),
+      body: JSON.stringify(preview),
     });
+    console.log('a string', preview)
 
   if (imgRes.ok) {
     const img = await imgRes.json();
-    dispatch(createGroupImage(img));
+    dispatch(createGroupImage(preview));
     return img;
   }
   };

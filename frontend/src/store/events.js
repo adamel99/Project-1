@@ -4,6 +4,7 @@ const GET_ALL_EVENTS = "events/getAllEvents";
 const CREATE_EVENT = "events/createEvent";
 const GET_SINGLE_EVENT = "events/getSingleEvent";
 const DELETE_EVENT = "events/deleteEvent";
+const SAVE_EVENT_IMAGE = 'events/saveEventImage'
 const getAllEvents = (events) => {
   return {
     type: GET_ALL_EVENTS,
@@ -31,6 +32,13 @@ const deleteEvent = (eventToDelete) => {
     payload: eventToDelete,
   };
 };
+
+export const saveEventImage = (imgUrl) => {
+  return {
+    type: SAVE_EVENT_IMAGE,
+    payload: imgUrl,
+  }
+}
 export const getAllEventsThunk = () => async (dispatch) => {
   const res = await csrfFetch("/api/events");
   console.log(res);
@@ -42,9 +50,10 @@ export const getAllEventsThunk = () => async (dispatch) => {
   }
 };
 export const getSingleEventThunk = (eventId) => async (dispatch) => {
+
   try {
     const res = await csrfFetch(`/api/events/${eventId}`);
-
+// console.log('eventtttt', eventId)
     if (res.ok) {
       const event = await res.json();
       dispatch(getSingleEvent(event));
@@ -65,7 +74,9 @@ export const createEventThunk = (event) => async (dispatch) => {
 
     if (res.ok) {
       const newEvent = await res.json();
+
       dispatch(createEvent(newEvent));
+
       return newEvent;
     }
   } catch (err) {
@@ -92,7 +103,8 @@ export const deleteEventThunk = (eventToDelete) => async (dispatch) => {
   }
 };
 
-const initialState = { allEvents: [], singleEvent: {} };
+
+const initialState = { allEvents: [], singleEvent: {}, eventImgUrl: ""};
 
 const eventsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -105,6 +117,11 @@ const eventsReducer = (state = initialState, action) => {
       return {
         ...state,
         singleEvent: action.payload,
+      };
+      case SAVE_EVENT_IMAGE:
+      return {
+        ...state,
+        eventImgUrl: action.payload,
       };
     case CREATE_EVENT:
       return {
@@ -122,6 +139,7 @@ const eventsReducer = (state = initialState, action) => {
     default:
       return state;
   }
+
 };
 
 export default eventsReducer;

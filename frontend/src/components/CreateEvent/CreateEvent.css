@@ -1,0 +1,6 @@
+.event-creator__preview-image {
+    width: 200px; /* Set the width as you desire */
+    height: 200px; /* Set the height as you desire */
+    object-fit: cover; /* This property ensures that the image covers the entire container */
+    margin-top: 10px;
+  }

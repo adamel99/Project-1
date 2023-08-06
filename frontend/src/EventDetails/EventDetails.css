@@ -20,3 +20,7 @@
     box-shadow: 2px 2px 0 0 black;
     margin-top: 30px;
   }
+  .event-details__image-container{
+    width:100px;
+    height: 100px;
+  }

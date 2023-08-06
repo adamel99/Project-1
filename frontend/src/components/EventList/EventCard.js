@@ -16,7 +16,7 @@ export const EventCard = ({ event }) => {
     return (
         <div className="event-card-container" onClick={handleEventClick}>
             <div className="event-card-image-container">
-                <img className="event-card-image" src='https://media.timeout.com/images/105841825/750/422/image.jpg' alt="" />
+                <img className="event-card-image" src={event.previewImage} alt="" />
                 <div className="event-card-info-container"></div>
                 <div className="event-card-status-info">
                     <h2 className="event-card-title">{event.name}</h2>

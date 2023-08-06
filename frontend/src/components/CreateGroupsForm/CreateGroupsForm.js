@@ -4,15 +4,16 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { createGroupThunk as CreateGroups } from "../../store/groups";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 const CreateGroupsForm = () => {
-  const sessionUser = useSelector((state) => state.session.user);
+  // const sessionUser = useSelector((state) => state.session.user);
   const dispatch = useDispatch();
   const history = useHistory();
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [inFlight, setInflight] = useState(false);
+  // const [imageURL, setImageURL] = useState("");
 
   useEffect(() => {
     const validation = {};
@@ -35,8 +36,8 @@ const CreateGroupsForm = () => {
     if (!formData.groupStatus) {
       validation.visibility = "Visibility type is required";
     }
-    if (!formData.previewImage) {
-      validation.previewImage = "Image is required";
+    if (!formData.preview) {
+      validation.preview = "Image is required";
     }
 
     setErrors(validation);
@@ -51,17 +52,24 @@ const CreateGroupsForm = () => {
   // const handleGroupSubmit = async (e) => {
   async function handleGroupSubmit(e) {
     e.preventDefault();
-    console.log('an empty string')
+
     if (Object.keys(errors).length > 0) {
       console.log("Form has errors:", errors);
       return;
     }
 
+    if (!formData.preview) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        preview: "Image URL is required",
+      }));
+      return;
+    }
+
     setInflight(true);
-    console.log('set in flight')
-    const { location, name, desc, groupType, groupStatus, previewImage } = formData;
+
+    const { location, name, desc, groupType, groupStatus } = formData;
     const [city, state] = location.split(", ");
-    console.log('the state', state)
 
     const newGroup = {
       name,
@@ -70,17 +78,19 @@ const CreateGroupsForm = () => {
       private: groupStatus === "Private",
       city,
       state,
-      organizer: sessionUser,
-      previewImage,
+      // organizer: sessionUser,
+      preview: formData.preview,
     };
+
     try {
-      const res = await dispatch(CreateGroups(newGroup));
+      const res = await dispatch(CreateGroups(newGroup, formData.preview));
+      // const res2 = await dispatch(CreateGroupImage(formData.previewImage))
       history.push(`/groups/${res.id}`);
     } catch (error) {
       console.error("Error while creating group:", error);
       setInflight(false);
     }
-  };
+  }
   console.log('a sentence')
   return (
     <form onSubmit={handleGroupSubmit}>
@@ -175,9 +185,9 @@ const CreateGroupsForm = () => {
             <p>Please add an image URL for your group below:</p>
             <input
               placeholder="Image URL"
-              name="previewImage"
-              type='file'
-              // value={formData.previewImage || ""}
+              name="preview"
+              type="text"
+              value={formData.preview || ''}
               onChange={handleInputChange}
             />
             {errors.image && inFlight && <p style={{ color: "red" }}>{errors.image}</p>}
