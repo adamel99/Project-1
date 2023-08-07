@@ -29,7 +29,9 @@ function App() {
       {isLoaded &&
         <Switch>
           <Route exact path="/">
+
             <LandingPage />
+
           </Route>
           <Route exact path="/groups/new">
             <CreateGroupsForm />

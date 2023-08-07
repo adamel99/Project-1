@@ -23,7 +23,7 @@ const ViewAllGroups = () => {
       <section className="group-event-section">
         <div className="title-container">
           <NavLink to="/groups" activeClassName="active-link">
-            Groups!
+            Groups
           </NavLink>
         </div>
         <p>Checkout a Group! Connect with your community!</p>

@@ -56,9 +56,9 @@ const EventDetails = () => {
               <i class="fa-solid fa-clock"></i>
               <div className="start-to-end">
                 <p>Start Date</p>
-                <p>{event.startDate.split(" ").join(" · ")}</p>
+                <p>{event.startDate && event.startDate.split(" ").join(" · ")}</p>
                 <p>End Date</p>
-                <p> {event.endDate.split(" ").join(" · ")}</p>
+                <p> {event.endDate && event.endDate.split(" ").join(" · ")}</p>
               </div>
             </div>
             <div className="event-details-row">

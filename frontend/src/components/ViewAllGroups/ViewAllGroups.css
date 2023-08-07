@@ -1,6 +1,19 @@
 .title-container a:not(.active-link) {
     color: red;
+    cursor: pointer;
+
   }
   .active-link {
     color: purple;
+  }
+
+  .group-event-section{
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+
+  }
+  .group-event-section p{
+    font-size: 20px
   }
