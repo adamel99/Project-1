@@ -53,20 +53,20 @@ const CreateGroupsForm = () => {
   async function handleGroupSubmit(e) {
     e.preventDefault();
 
+    setInflight(true);
     if (Object.keys(errors).length > 0) {
       console.log("Form has errors:", errors);
       return;
     }
 
-    if (!formData.preview) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        preview: "Image URL is required",
-      }));
-      return;
-    }
+    // if (!formData.preview) {
+    //   setErrors((prevErrors) => ({
+    //     ...prevErrors,
+    //     preview: "Image URL is required",
+    //   }));
+    //   return;
+    // }
 
-    setInflight(true);
 
     const { location, name, desc, groupType, groupStatus } = formData;
     const [city, state] = location.split(", ");
@@ -94,6 +94,7 @@ const CreateGroupsForm = () => {
   console.log('a sentence')
   return (
     <form onSubmit={handleGroupSubmit}>
+
       <div className="meetup-form">
         <section className="meetup-form__heading">
           <h2>Start a New Group</h2>
@@ -113,7 +114,7 @@ const CreateGroupsForm = () => {
             value={formData.location || ""}
             onChange={handleInputChange}
           />
-          {errors.location && inFlight && <p style={{ color: "red" }}>{errors.location}</p>}
+          {errors.location && <p style={{ color: "red" }}>{errors.location}</p>}
         </section>
         <section className="meetup-form__group-name-input-section">
           <h3>What will your group's name be?</h3>
@@ -129,7 +130,7 @@ const CreateGroupsForm = () => {
             value={formData.name || ""}
             onChange={handleInputChange}
           />
-          {errors.name && inFlight && <p style={{ color: "red" }}>{errors.name}</p>}
+          {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
         </section>
         <section className="meetup-form__group-desc-input-section">
           <h3>Now describe what your group will be about</h3>
@@ -150,7 +151,7 @@ const CreateGroupsForm = () => {
             value={formData.desc || ""}
             onChange={handleInputChange}
           />
-          {errors.desc && inFlight && <p style={{ color: "red" }}>{errors.desc}</p>}
+          {errors.desc  && <p style={{ color: "red" }}>{errors.desc}</p>}
         </section>
         <section className="meetup-form__final-steps-section">
           <h3>Final steps...</h3>
@@ -166,20 +167,24 @@ const CreateGroupsForm = () => {
               <option value="Online">Online</option>
               <option value="In person">In Person</option>
             </select>
-            {errors.type && inFlight && <p style={{ color: "red" }}>{errors.type}</p>}
+            {errors.type  && <p style={{ color: "red" }}>{errors.type}</p>}
           </div>
+          <div>
+
+      </div>
           <div className="meetup-form__group-status-container">
             <p>Is this group private or public?</p>
             <select
               className="meetup-form__group-status-input"
               name="groupStatus"
-              value={formData.groupStatus || "Private"}
+              value={formData.groupStatus}
               onChange={handleInputChange}
             >
+              <option value = "(select one)">Select an option</option>
               <option value="Private">Private</option>
               <option value="Public">Public</option>
             </select>
-            {errors.visibility && inFlight && <p style={{ color: "red" }}>{errors.visibility}</p>}
+            {errors.visibility  && <p style={{ color: "red" }}>{errors.visibility}</p>}
           </div>
           <div className="meetup-form__group-img-input">
             <p>Please add an image URL for your group below:</p>
@@ -190,7 +195,7 @@ const CreateGroupsForm = () => {
               value={formData.preview || ''}
               onChange={handleInputChange}
             />
-            {errors.image && inFlight && <p style={{ color: "red" }}>{errors.image}</p>}
+            {errors.image &&  <p style={{ color: "red" }}>{errors.image}</p>}
           </div>
         </section>
         {/* <section className="meetup-form__submission-section"> */}
