@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as sessionActions from "../../store/session";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
 
@@ -10,6 +10,21 @@ function LoginFormModal() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
+  const [userFirstName, setUserFirstName] = useState(null);
+
+  // Redux selector to get the logged-in user
+  const user = useSelector((state) => state.session.user);
+
+  // Define the minimum length for username and password
+  const minUsernameLength = 4;
+  const minPasswordLength = 6;
+
+  useEffect(() => {
+    // Check if a user is logged in and set their first name
+    if (user) {
+      setUserFirstName(user.firstName);
+    }
+  }, [user]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,6 +38,9 @@ function LoginFormModal() {
         }
       });
   };
+
+  // Determine if the "Log in" button should be disabled
+  const isButtonDisabled = credential.length < minUsernameLength || password.length < minPasswordLength;
 
   return (
     <>
@@ -49,8 +67,11 @@ function LoginFormModal() {
         {errors.credential && (
           <p>{errors.credential}</p>
         )}
-        <button type="submit">Log In</button>
+        <button type="submit" disabled={isButtonDisabled}>Log In</button>
       </form>
+      {userFirstName && (
+        <p>Hello, {userFirstName}</p>
+      )}
     </>
   );
 }

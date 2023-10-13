@@ -285,7 +285,11 @@ router.put('/venues/:venueId', (req, res) => {
       res.status(500).json({ message: 'Internal Server Error' });
     });
 });
-
+function checkIfExist(length){
+  if(length === 0){
+    throw new Error('No events found')
+  }
+}
 // CREATE EVENT FOR A GROUP BY ID
 router.get("/:groupId/events", async (req, res) => {
   const events = await Event.findAll({

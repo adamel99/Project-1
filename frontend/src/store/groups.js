@@ -5,8 +5,14 @@ const CREATE_GROUP = "groups/createGroup";
 const DELETE_GROUP = "groups/deleteGroup";
 const UPDATE_GROUP = "groups/updateGroup";
 const CREATE_GROUP_IMAGE = 'groups/createGroupImage'
+const STORE_GROUP_EVENTS = 'events/storeGroupEvents'
 
-
+function storeGroupEvents(events) {
+  return {
+    type: STORE_GROUP_EVENTS,
+    payload: events
+  }
+}
 function GetAllGroups(groups) {
     return {
         type: VIEW_ALL_GROUPS,
@@ -48,7 +54,7 @@ const createGroupImage = (preview) => ({
 });
 
 
-const initialState = { allGroups: {}, singleGroup: {} };
+const initialState = { allGroups: {}, singleGroup: { events: [] } };
 export const ViewAllGroupsThunk = () => {
     return async (dispatch) => {
         try {
@@ -71,8 +77,12 @@ export const ViewSingleGroupThunk = (groupId) => async (dispatch) => {
     }
 
     const group = await res.json();
-    console.log("group", group);
+    const eventsRes = await fetch(`/api/groups/${groupId}/events`);
+    const events = await eventsRes.json();
+
     dispatch(getSingleGroup(group));
+    dispatch(storeGroupEvents(events.Events));
+
     return group;
   } catch (error) {
     console.error(error);
@@ -183,7 +193,10 @@ const groupsReducer = (state = initialState, action) => {
       case VIEW_SINGLE_GROUP: {
         return {
           ...state,
-          singleGroup: action.payload,
+          singleGroup: {
+            ...state.singleGroup,
+            ...action.payload,
+          },
         };
       }
       case DELETE_GROUP: {
@@ -195,6 +208,15 @@ const groupsReducer = (state = initialState, action) => {
           allGroups: newAllGroups,
           singleGroup: {},
         };
+      }
+      case STORE_GROUP_EVENTS: {
+        return {
+          ...state,
+          singleGroup: {
+            ...state.singleGroup,
+            events: action.payload
+          }
+        }
       }
       default:
         return state;

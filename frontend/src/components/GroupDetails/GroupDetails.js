@@ -3,7 +3,7 @@ import { NavLink, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import React, { useEffect } from "react";
-import {  ViewSingleGroupThunk as getSingleGroup } from "../../store/groups";
+import { ViewSingleGroupThunk as getSingleGroup } from "../../store/groups";
 import { createGroupImagesThunk as getImageGroup } from "../../store/groups";
 import DeleteGroup from "../DeleteGroup/DeleteGroup";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
@@ -14,12 +14,24 @@ import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 const GroupDetails = () => {
     const sessionUser = useSelector((state) => state.session.user);
     const dispatch = useDispatch();
-    const { groupId ,preview, url } = useParams();
+    const { groupId, preview, url } = useParams();
     const group = useSelector((state) => state.groups.singleGroup);
 
     const groupOrganizerId = group.organizerId;
     const history = useHistory();
-
+    const eventsSection =
+        group.events && group.events.length > 0 ? (
+            <div className="created_events">
+                <h3>Events</h3>
+                <ul>
+                    {group.events.map((event) => (
+                        <li key={event.id}>
+                            <h4>{event.name}</h4>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        ) : null;
     useEffect(() => {
         dispatch(getSingleGroup(groupId));
         dispatch(getImageGroup(groupId, preview, url))
@@ -35,8 +47,8 @@ const GroupDetails = () => {
     const { firstName, lastName } = group.Organizer;
 
     const groupImage = group.GroupImages && group.GroupImages.length > 0
-    ? group.GroupImages[0].url
-    : '';
+        ? group.GroupImages[0].url
+        : '';
     return (
         <div className="modified-group-details">
             <div className="modified-group-details">
@@ -66,9 +78,15 @@ const GroupDetails = () => {
                             <p>{group.private ? "Private" : "Public"}</p>
                         </div>
                         <p>
-                            Organizer: {firstName} {lastName}
+                            Organized by: {firstName} {lastName}
                         </p>
                     </div>
+                    <div className='group_events'>
+                        <h3>Group Events</h3>
+                        {/* Add Events for specific group here */}
+                        {eventsSection}
+                    </div>
+                    {/* {eventsSection} */}
                     <div className="modified-container">
                         {sessionUser && sessionUser.id !== groupOrganizerId && (
                             <button
