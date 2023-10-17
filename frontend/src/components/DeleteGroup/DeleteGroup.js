@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useModal } from "../../context/Modal";
 import { deleteGroupThunk } from "../../store/groups";
 import { useDispatch } from "react-redux";
+import "./DeleteGroup.css"
 
 const DeleteGroup = ({ groupDelete, setDeleteGroup }) => {
   const { openModal, closeModal } = useModal();

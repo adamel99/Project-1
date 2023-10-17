@@ -1,10 +1,16 @@
 .title-container a:not(.active-link) {
-    color: red;
+    color: blue;
     cursor: pointer;
+    text-decoration: none;
+  }
 
+  .title-container{
+    font-family: 'Dosis', sans-serif;
+    text-decoration: none;
+    text-size: 30px;
   }
   .active-link {
-    color: purple;
+    color: blue;
   }
 
   .group-event-section{
@@ -16,4 +22,8 @@
   }
   .group-event-section p{
     font-size: 20px
+  }
+
+  .groups-list{
+    font-family: 'Dosis', sans-serif;
   }

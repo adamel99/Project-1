@@ -22,7 +22,7 @@ const GroupDetails = () => {
     const eventsSection =
         group.events && group.events.length > 0 ? (
             <div className="created_events">
-                <h3>Events</h3>
+                {/* <h3>Events</h3> */}
                 <ul>
                     {group.events.map((event) => (
                         <li key={event.id}>
@@ -51,7 +51,7 @@ const GroupDetails = () => {
         : '';
     return (
         <div className="modified-group-details">
-            <div className="modified-group-details">
+            <div className="modified-group-details-title">
                 <NavLink to="/groups">Groups</NavLink>
             </div>
             <section className="modified-group-details__group-section">
@@ -116,7 +116,7 @@ const GroupDetails = () => {
                                 >
                                     Update
                                 </button>
-                                <button>
+                                <button className="modified-group-details__join-group-btn">
                                     {sessionUser && sessionUser.id === groupOrganizerId && (
                                         <OpenModalMenuItem
                                             itemText="Delete"

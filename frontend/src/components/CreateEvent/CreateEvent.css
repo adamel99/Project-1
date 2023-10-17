@@ -4,3 +4,42 @@
     object-fit: cover; /* This property ensures that the image covers the entire container */
     margin-top: 10px;
   }
+.event-creator{
+  font-family: 'Dosis', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.event-creator__create-event-btn{
+  display: block;
+    width: 250px;
+    padding: 10px;
+    border: solid black;
+    background-color: blue;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 3px 1px 0 0 black;
+    margin-bottom: 30px;
+    /* align-items: center; */
+    font-family: 'Dosis', sans-serif;
+    margin-top: 15px;
+}
+
+.event-creator__name-input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-creator__image-input-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

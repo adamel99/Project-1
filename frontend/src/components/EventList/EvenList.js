@@ -31,7 +31,7 @@ const EventList = () => {
   return (
     <div className="events-container">
       <div className="selection-section">
-        <div className="title-container">
+        <div className="title-container-events">
           <NavLink
             to="/events"
             className={(isActive) =>

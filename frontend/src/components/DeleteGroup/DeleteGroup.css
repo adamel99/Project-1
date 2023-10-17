@@ -1,0 +1,63 @@
+.confirmation-modal {
+    display: block;
+    width: 250px;
+    padding: 30px;
+    border: solid black;
+    background-color: rgb(247, 247, 247);
+    /* color: white; */
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 3px 1px 0 0 black;
+    /* margin-top: 30px; */
+    justify-content: center;
+    /* gap:10px; */
+
+
+
+    font-family: 'Dosis', sans-serif;
+}
+
+
+.confirmation-modal h2{
+    color:black;
+}
+
+.confirmation-modal p {
+    color: black
+}
+
+
+
+.confirmation-modal__keep-btn{
+    display: block;
+    width: 250px;
+    padding: 10px;
+    border: solid black;
+    background-color: blue;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 3px 1px 0 0 black;
+    margin-top: 30px;
+    justify-content: center;
+    font-family: 'Dosis', sans-serif;
+}
+
+.confirmation-modal__delete-btn{
+    display: block;
+    width: 250px;
+    padding: 10px;
+    border: solid black;
+    background-color: blue;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 3px 1px 0 0 black;
+    margin-bottom: 30px;
+    /* align-items: center; */
+    font-family: 'Dosis', sans-serif;
+
+}

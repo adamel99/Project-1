@@ -7,6 +7,9 @@
     margin: 3rem auto;
     align-items: center;
     margin-top: 8rem;
+    /* margin-bottom: 10px; */
+    font-family: 'Dosis', sans-serif;
+    font-size: 17px;
   }
 
   .main-content-cards-container > div {
@@ -28,6 +31,8 @@
   }
 
 
+
+
   .main-content-join-meetup-btn {
     background-color: hsl(188, 91%, 29%);
     color: #fff;
@@ -44,7 +49,7 @@
 
   h1 {
     font-size: 50px;
-    color: blue
+    color: blue;
   }
 
   .intro {
@@ -55,6 +60,8 @@
   .main-content-image {
     width: 100%;
     height: 100%;
+    margin-top: 50px;
+    margin-left: 20px;
   }
 
   .start-new-group-btn-disabled {
@@ -64,9 +71,24 @@
   .main-content-title {
     display: flex;
     flex-direction: column;
-    margin-left: 2rem;
   }
 
   .navlink{
     color: blue
+  }
+
+  .join-meetup{
+    display: block;
+    width: 150px;
+    padding: 10px;
+    border: solid black;
+    background-color: blue;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 3px 1px 0 0 black;
+    margin-bottom: 30px;
+    /* justify-content: center; */
+    font-family: 'Dosis', sans-serif;
   }
